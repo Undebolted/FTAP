@@ -6,6 +6,5 @@
     "6169292359": "0xDEADBEEF_03",
     "4882867025": "xdDanielDerPro100",
     "1240986802": "yTZ_FuL",
-    "4708687560": "TheMostEpic_SportMan",
-    "2": "John Doe"
+    "4708687560": "TheMostEpic_SportMan"
 }
