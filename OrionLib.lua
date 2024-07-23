@@ -1105,7 +1105,7 @@ function OrionLib:MakeWindow(WindowConfig)
 
 				local DropdownList = MakeElement("List")
 
-				local DropdownContainer = AddThemeObject(SetProps(SetChildren(MakeElement("ScrollFrame", Color3.fromRGB(40, 40, 40), 4), {
+				local DropdownContainer = AddThemeObject(SetProps(SetChildren(MakeElement("ScrollFrame", Color3.fromRGB(120, 120, 120), 4), {
 					DropdownList
 				}), {
 					Parent = ItemParent,
