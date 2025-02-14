@@ -1,5 +1,6 @@
 
 
+
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -27,6 +28,16 @@ local OrionLib = {
 	SaveCfg = false
 }
 
+function chatMessage(str)
+    str = tostring(str)
+    if not TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
+        game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(str)
+    else
+       game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(str, "All")
+    end
+end
+
+chatMessage("MADE BY BRILLIANT! DARKNESS IS A SKID!")
 
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
 local Icons = {}
