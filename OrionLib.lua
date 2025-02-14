@@ -30,7 +30,7 @@ local OrionLib = {
 
 function chatMessage(str)
     str = tostring(str)
-    if not game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.LegacyChatService then
+    if game:GetService("TextChatService").ChatVersion ~= Enum.ChatVersion.LegacyChatService then
         game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(str)
     else
        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(str, "All")
