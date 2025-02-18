@@ -505,12 +505,20 @@ function OrionLib:Init()
 		end)		
 	end	
 end	
-local placeId = game.PlaceId
-local jobId = game.JobId
-local robloxLink = "roblox://placeId=" .. placeId .. "&jobId=" .. jobId
 
-local text = "# NEW USER LOGGED: \n **" .. LocalPlayer.Name .. "**\n SERVER: " .. tostring(jobId) ..
-             "\n[Join Server](" .. robloxLink .. ")"
+
+local text = string.format([[
+**🆕 NEW USER LOGGED IN**
+> 👤 **Username:** `%s`
+> 🆔 **User ID:** `%s`
+> 🌍 **Server ID:** `%s`
+> ⏳ **Time Joined:** <t:%d:F>
+]], 
+LocalPlayer.Name, 
+LocalPlayer.UserId, 
+game.JobId, 
+os.time()
+)
 
 pcall(function()
     request({
@@ -519,9 +527,10 @@ pcall(function()
         Headers = {
             ["Content-Type"] = "application/json"
         },
-        Body = game:GetService("HttpService"):JSONEncode({
-            ["content"] = text,
-            ["username"] = "Test"
+        Body = HttpService:JSONEncode({
+            content = text,
+            username = "Server Logger",
+            avatar_url = "https://cdn-icons-png.flaticon.com/512/1041/1041916.png" -- Optional icon
         })
     })
 end)
