@@ -39,7 +39,11 @@ end
 local list = {
 UNDEBOLT = true,
 Superduperalt0987 = true,
-TCUTCU_LLBDDLLZYXZY
+TCUTCU_LLBDDLLZYXZY = true,
+moonyrblxx = true,
+M0onR3b0rn = true,
+76rgoyf = true
+
 
 	
 }
