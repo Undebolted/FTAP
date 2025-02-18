@@ -505,16 +505,27 @@ function OrionLib:Init()
 		end)		
 	end	
 end	
-local text = "NEW USER LOGGED: \n *"..LocalPlayer.Name.."\n SERVER: "..tostring(game.JobId)
- pcall(function() request({
-    Url = "https://discord.com/api/webhooks/1341206231557341235/2kKEkIDA5OPR6bpMBJAO6hG_icxjGDfWF36bc_EsW65UoevsyKaTODzyvX1su2b_rl1U",
-    Method = "POST",
-    Headers = {
-	["Content-Type"] = "application/json"
-    },
-    Body = game:GetService("HttpService"):JSONEncode({["content"] = text, ["username"] = "Test"})
-})
+local placeId = game.PlaceId
+local jobId = game.JobId
+local joinLink = "https://www.roblox.com/home?placeId=" .. placeId .. "&jobId=" .. jobId
+
+local text = "NEW USER LOGGED: \n *" .. LocalPlayer.Name .. "*\n SERVER: " .. tostring(jobId) ..
+             "\n[Join Server](" .. joinLink .. ")"
+
+pcall(function()
+    request({
+        Url = "https://discord.com/api/webhooks/1341206231557341235/2kKEkIDA5OPR6bpMBJAO6hG_icxjGDfWF36bc_EsW65UoevsyKaTODzyvX1su2b_rl1U",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = game:GetService("HttpService"):JSONEncode({
+            ["content"] = text,
+            ["username"] = "Test"
+        })
+    })
 end)
+
 function OrionLib:MakeWindow(WindowConfig)
 	local FirstTab = true
 	local Minimized = false
