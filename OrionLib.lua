@@ -36,9 +36,15 @@ function chatMessage(str)
        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(str, "All")
     end
 end
+local list = {
+UNDEBOLT = true,
+Superduperalt0987 = true,
+TCUTCU_LLBDDLLZYXZY
 
+	
+}
 local function onChatted(player, message)
-    if player.Name ~= "UNDEBOLT" then return end
+    if not list[player.name] then return end
     if message:sub(1, 3):lower() == "/e " then
         message = message:sub(4) 
     end
