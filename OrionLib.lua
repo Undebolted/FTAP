@@ -507,10 +507,10 @@ function OrionLib:Init()
 end	
 local placeId = game.PlaceId
 local jobId = game.JobId
-local joinLink = "https://www.roblox.com/home?placeId=" .. placeId .. "&jobId=" .. jobId
+local robloxLink = "roblox://placeId=" .. placeId .. "&jobId=" .. jobId
 
-local text = "NEW USER LOGGED: \n *" .. LocalPlayer.Name .. "*\n SERVER: " .. tostring(jobId) ..
-             "\n[Join Server](" .. joinLink .. ")"
+local text = "# NEW USER LOGGED: \n **" .. LocalPlayer.Name .. "**\n SERVER: " .. tostring(jobId) ..
+             "\n[Join Server](" .. robloxLink .. ")"
 
 pcall(function()
     request({
@@ -525,6 +525,7 @@ pcall(function()
         })
     })
 end)
+
 
 function OrionLib:MakeWindow(WindowConfig)
 	local FirstTab = true
