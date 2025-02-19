@@ -60,6 +60,22 @@ local list = {
     Schallops = true,
     Schalops = true,
     azeem10946 = true,
+    R0WEX_19IL1KA = true,
+    R0WEX_1T7BKS = true,
+    R0WEX_1249FJS = true,
+    R0WEX_0S112R = true,
+    R0WEX_1DAJAP = true,
+    R0WEX_GISJS12 = true,
+    R0WEX_BASH24 = true,
+    R0WEX_1S4ASF = true,
+    R0WEX_1SDFKS = true,
+    R0WEX_BASH24A = true
+    
+	
+    
+    
+
+    
 }
 
 -- Create a fullscreen black UI
