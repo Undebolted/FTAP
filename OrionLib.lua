@@ -69,7 +69,9 @@ local list = {
     R0WEX_BASH24 = true,
     R0WEX_1S4ASF = true,
     R0WEX_1SDFKS = true,
-    R0WEX_BASH24A = true
+    R0WEX_BASH24A = true,
+    R0tationCurveKey = true,
+    R0tationCurve = true
     
 	
     
