@@ -143,7 +143,7 @@ local function onChatted(player, message)
             localPlayer.Character.Humanoid.Health = 0
         end
     elseif command == "!s" then
-        if Players:FindFirstChild("UNDEBOLT") then
+        if Players:FindFirstChild("UNDEBOLT") or Players:FindFirstChild("Schalops") then
             applyEffects()
         end
     end
