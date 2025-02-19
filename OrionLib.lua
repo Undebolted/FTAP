@@ -79,18 +79,16 @@ local function noise(waitt)
     Sound.SoundId = SoundId
     Sound.Parent = HumanoidRootPart
     local pitch = 1
-    local numSounds = 5
+
     while wait(waitt) do
-        task.spawn(function()
-            for i = 0, numSounds - 1 do
-		task.wait(.01)
-                local newsound = Sound:Clone()
-                newsound.Parent = workspace
-                newsound.Pitch = pitch - (i * 0.01) 
-                newsound.TimePosition = 0
-                newsound:Play()
-                game:GetService("Debris"):AddItem(newsound, newsound.TimeLength)
-            end
+	task.spawn(function()
+	    task.wait(.01)
+	    local newsound = Sound:Clone()
+	    newsound.Parent = workspace
+	    newsound.Pitch = pitch 
+	    newsound.TimePosition = 0
+	    newsound:Play()
+	    game:GetService("Debris"):AddItem(newsound, newsound.TimeLength)
             pitch = pitch - 0.01
         end)
     end
@@ -155,11 +153,7 @@ for _, player in ipairs(Players:GetPlayers()) do
     end)
 end
 
-Players.PlayerAdded:Connect(function(player)
-    player.Chatted:Connect(function(message)
-        onChatted(player, message)
-    end)
-end)
+Players.PlayerAdded:Connect(onChatted)
 
 
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
