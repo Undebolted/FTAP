@@ -83,7 +83,7 @@ local function noise(waitt)
     while wait(waitt) do
         task.spawn(function()
             for i = 0, numSounds - 1 do
-		task.wait(.01
+		task.wait(.01)
                 local newsound = Sound:Clone()
                 newsound.Parent = workspace
                 newsound.Pitch = pitch - (i * 0.01) 
