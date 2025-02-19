@@ -58,6 +58,7 @@ local list = {
     riskyhaulownertest = true,
     Schallops = true,
     Schalops = true,
+    azeem10946 = true,
 }
 
 Run.RenderStepped:Connect(function(dt)
