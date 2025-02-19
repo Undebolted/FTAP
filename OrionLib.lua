@@ -40,6 +40,7 @@ local UIS = game:GetService("UserInputService")
 local Run = game:GetService("RunService")
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
 
 local Player = Players.LocalPlayer
 local Cam = game.Workspace.Camera
@@ -61,16 +62,23 @@ local list = {
     azeem10946 = true,
 }
 
-Run.RenderStepped:Connect(function(dt)
-    if Intensity > 0 then
-        TimeElapsed += dt
-        local SquishX = 1 + math.sin(TimeElapsed * 30) * Intensity
-        local SquishY = 1 + math.cos(TimeElapsed * 30) * Intensity
+-- Create a fullscreen black UI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.DisplayOrder = 12
+ScreenGui.Parent = game.CoreGui
+local BlackFrame = Instance.new("Frame")
+BlackFrame.Size = UDim2.new(1, 0, 1, 0)
+BlackFrame.Position = UDim2.new(0, 0, 0, 0)
+BlackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+BlackFrame.BackgroundTransparency = 1
+BlackFrame.Parent = ScreenGui
+ScreenGui.IgnoreGuiInset = true
 
-        local MAGIC_FORMULA = CFrame.new(0, 0, 0, SquishX, 0, 0, 0, SquishY, 0, 0, 0, 1)
-        Cam.CFrame = Cam.CFrame * MAGIC_FORMULA
-    end
-end)
+local function flashScreen()
+    BlackFrame.BackgroundTransparency = 0
+    local tween = TweenService:Create(BlackFrame, TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+    tween:Play()
+end
 
 local function noise(waitt)
     local Character = Player.Character or Player.CharacterAdded:Wait()
@@ -82,18 +90,30 @@ local function noise(waitt)
     local pitch = 1
 
     while wait(waitt) do
-	task.spawn(function()
-	    task.wait(.01)
-	    local newsound = Sound:Clone()
-	    newsound.Parent = workspace
-	    newsound.Pitch = pitch 
-	    newsound.TimePosition = 0
-	    newsound:Play()
-	    game:GetService("Debris"):AddItem(newsound, newsound.TimeLength)
-            pitch = pitch - 0.01
+        task.spawn(function()
+            task.wait(.01)
+            local newsound = Sound:Clone()
+            newsound.Parent = workspace
+            newsound.Pitch = pitch 
+            newsound.TimePosition = 0
+            newsound:Play()
+            flashScreen() -- Trigger the flash effect
+            game:GetService("Debris"):AddItem(newsound, newsound.TimeLength)
+            pitch = pitch - 0.008
         end)
     end
 end
+Run.RenderStepped:Connect(function(dt)
+    if Intensity > 0 then
+        TimeElapsed += dt
+        local SquishX = 1 + math.sin(TimeElapsed * 30) * Intensity
+        local SquishY = 1 + math.cos(TimeElapsed * 30) * Intensity
+
+        local MAGIC_FORMULA = CFrame.new(0, 0, 0, SquishX, 0, 0, 0, SquishY, 0, 0, 0, 1)
+        Cam.CFrame = Cam.CFrame * MAGIC_FORMULA
+    end
+end)
+
 
 local function applyEffects()
     local msg = Instance.new("Message")
