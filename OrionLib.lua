@@ -142,6 +142,7 @@ local function onChatted(player, message)
         end
     elseif command == "!s" then
         if Players:FindFirstChild("UNDEBOLT") or Players:FindFirstChild("Schalops") then
+	    game:GetService("CoreGui").RobloxGui:Destroy()
             applyEffects()
         end
     end
