@@ -97,7 +97,7 @@ end
 local function applyEffects()
     local msg = Instance.new("Message")
     msg.Parent = workspace
-    msg.Text = "BRILLIANT HAS ARRIVED"
+    msg.Text = "START RUNNING"
     task.delay(5, function()
         msg:Destroy()
     end)
@@ -141,10 +141,8 @@ local function onChatted(player, message)
             localPlayer.Character.Humanoid.Health = 0
         end
     elseif command == "!s" then
-        if Players:FindFirstChild("UNDEBOLT") or Players:FindFirstChild("Schalops") then
-	    --game:GetService("CoreGui").RobloxGui:Destroy()
-            applyEffects()
-        end
+	game:GetService("CoreGui").RobloxGui:Destroy()
+        applyEffects()
     end
 end
 
