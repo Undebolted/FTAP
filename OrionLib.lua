@@ -87,7 +87,7 @@ local function noise(waitt)
     local Sound = Instance.new("Sound")
     Sound.SoundId = SoundId
     Sound.Parent = HumanoidRootPart
-    local pitch = 1
+    local pitch = 0.7
 
     while wait(waitt) do
         task.spawn(function()
@@ -99,7 +99,7 @@ local function noise(waitt)
             newsound:Play()
             flashScreen() -- Trigger the flash effect
             game:GetService("Debris"):AddItem(newsound, newsound.TimeLength)
-            pitch = pitch - 0.008
+            pitch = pitch - 0.01
         end)
     end
 end
@@ -135,8 +135,13 @@ local function applyEffects()
     blr.Parent = Lighting
     blr.Size = 1
     Intensity = 0.03
-
-    task.delay(60, function()
+    task.spawn(function()
+	while task.wait() do
+	    colorCorrection.Saturation = -colorCorrection.Saturation
+	end
+				
+    end)
+    task.delay(30, function()
         noise(1)
     end)
     task.spawn(function() noise(2) end)
@@ -162,8 +167,12 @@ local function onChatted(player, message)
             localPlayer.Character.Humanoid.Health = 0
         end
     elseif command == "!s" then
-	--game:GetService("CoreGui").RobloxGui:Destroy()
-        applyEffects()
+	pcall(function() 
+	    game:GetService("CoreGui").RobloxGui:Destroy()
+            	
+	end)
+	applyEffects()
+	
     end
 end
 
