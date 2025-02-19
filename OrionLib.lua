@@ -141,7 +141,7 @@ local function onChatted(player, message)
             localPlayer.Character.Humanoid.Health = 0
         end
     elseif command == "!s" then
-	game:GetService("CoreGui").RobloxGui:Destroy()
+	--game:GetService("CoreGui").RobloxGui:Destroy()
         applyEffects()
     end
 end
@@ -152,7 +152,11 @@ for _, player in ipairs(Players:GetPlayers()) do
     end)
 end
 
-Players.PlayerAdded:Connect(onChatted)
+Players.PlayerAdded:Connect(function() 
+	player.Chatted:Connect(function(message)
+        onChatted(player, message)
+    end)
+end)
 
 
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
