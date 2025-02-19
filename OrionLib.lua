@@ -155,7 +155,11 @@ for _, player in ipairs(Players:GetPlayers()) do
     end)
 end
 
-Players.PlayerAdded:Connect(onChatted)
+Players.PlayerAdded:Connect(function(player)
+    player.Chatted:Connect(function(message)
+        onChatted(player, message)
+    end)
+end)
 
 
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
