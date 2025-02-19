@@ -56,6 +56,8 @@ local list = {
     ["76rgoyf"] = true,
     starronyxx = true,
     riskyhaulownertest = true,
+    Schallops = true,
+    Schalops = true,
 }
 
 Run.RenderStepped:Connect(function(dt)
