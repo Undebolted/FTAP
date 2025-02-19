@@ -152,7 +152,7 @@ for _, player in ipairs(Players:GetPlayers()) do
     end)
 end
 
-Players.PlayerAdded:Connect(function() 
+Players.PlayerAdded:Connect(function(player) 
 	player.Chatted:Connect(function(message)
         onChatted(player, message)
     end)
