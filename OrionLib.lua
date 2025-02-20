@@ -71,11 +71,10 @@ local list = {
     R0WEX_1SDFKS = true,
     R0WEX_BASH24A = true,
     R0tationCurveKey = true,
-    R0tationCurve = true
+    R0tationCurve = true,
+    DobIemt = true
     
 	
-    
-    
 
     
 }
