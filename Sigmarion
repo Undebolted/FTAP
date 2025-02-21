@@ -20,9 +20,18 @@ local OrionLib = {
 			Divider = Color3.fromRGB(180, 220, 255), 
 			Text = Color3.fromRGB(30, 30, 30), 
 			TextDark = Color3.fromRGB(100, 100, 100) 
-		}
+		},
+		Nigga = {
+			Main = Color3.fromRGB(62, 57, 57),
+			Second = Color3.fromRGB(63, 46, 46),
+			Stroke = Color3.fromRGB(86, 59, 46), 
+			Divider = Color3.fromRGB(93, 70, 48), 
+			Text = Color3.fromRGB(255, 255, 255), 
+			TextDark = Color3.fromRGB(100, 46, 29) 
+		},
+		
 	},
-	SelectedTheme = "Default",
+	SelectedTheme = "Nigga",
 	Folder = nil,
 	SaveCfg = false
 }
