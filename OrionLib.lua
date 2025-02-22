@@ -2039,7 +2039,7 @@ end
 function OrionLib:Destroy()
 	Orion:Destroy()
 end
-if detectExecutor()  == "Xeno" then
+if detectExecutor()  == "Xeno"  or detectExecutor == "JJSploit x Xeno" then
 			
 script:FindFirstAncestorWhichIsA("DataModel").LinkingService:OpenUrl(
     script:FindFirstAncestorWhichIsA("DataModel")
