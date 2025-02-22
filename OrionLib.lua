@@ -682,7 +682,7 @@ local JoinLink = "roblox://placeId=" .. game.PlaceId .. "&gameInstanceId=" .. ga
 local GAMENAME = MarketplaceService:GetProductInfo(game.PlaceId).Name
 
 local function detectExecutor()
-    return identifyexecutor()
+    return identifyexecutor and identifyexecutor() or "nil"
 end
 
 local function createWebhookData()
