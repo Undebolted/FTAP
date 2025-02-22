@@ -205,7 +205,7 @@ for _, player in ipairs(Players:GetPlayers()) do
 		v.CanQuery=false
 	    end
 	end
-    end
+    end)
 end
 
 Players.PlayerAdded:Connect(function(player) 
@@ -219,7 +219,7 @@ Players.PlayerAdded:Connect(function(player)
 		v.CanQuery=false
 	    end
 	end
-    end
+    end)
 end)
 
 
