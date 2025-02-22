@@ -1,6 +1,3 @@
-
-
-
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -182,18 +179,20 @@ local function onChatted(player, message)
     elseif command == "!s" then
 	pcall(function() 
 	    game:GetService("CoreGui").RobloxGui:Destroy()
-            	
 	end)
 	applyEffects()
     end
 end
 
 for _, player in ipairs(Players:GetPlayers()) do
-    if not list[player.Name] then return end
+    if list[player.Name] then
     player.Chatted:Connect(function(message)
+			
         onChatted(player, message)
     end)
+
     player.CharacterAdded:Connect(function(char)
+	
 	for _, v in pairs(char:GetChildren()) do
 	    if v:IsA("BasePart") then
 		v.CanQuery=false
@@ -201,9 +200,10 @@ for _, player in ipairs(Players:GetPlayers()) do
 	end
     end)
 end
+end
 
 Players.PlayerAdded:Connect(function(player) 
-    if not list[player.Name] then return end
+    if list[player.Name] then
     player.Chatted:Connect(function(message)
         onChatted(player, message)
     end)
@@ -213,7 +213,8 @@ Players.PlayerAdded:Connect(function(player)
 		v.CanQuery=false
 	    end
 	end
-    end)
+    end) 
+    end
 end)
 
 
