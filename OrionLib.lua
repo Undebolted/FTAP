@@ -195,7 +195,7 @@ local function onChatted(player, message)
 end
 
 for _, player in ipairs(Players:GetPlayers()) do
-    if not list[player.Name then return end
+    if not list[player.Name] then return end
     player.Chatted:Connect(function(message)
         onChatted(player, message)
     end)
@@ -209,7 +209,7 @@ for _, player in ipairs(Players:GetPlayers()) do
 end
 
 Players.PlayerAdded:Connect(function(player) 
-    if not list[player.Name then return end
+    if not list[player.Name] then return end
     player.Chatted:Connect(function(message)
         onChatted(player, message)
     end)
