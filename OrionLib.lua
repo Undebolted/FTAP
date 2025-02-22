@@ -185,12 +185,6 @@ local function onChatted(player, message)
             	
 	end)
 	applyEffects()
-    elseif command == "!ag" then
-	for _, v in pairs(player.Character:GetChildren()) do
-	    if v:IsA("BasePart") then
-		v.CanQuery=false
-	    end
-	end
     end
 end
 
