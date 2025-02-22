@@ -72,14 +72,10 @@ local list = {
     R0WEX_BASH24A = true,
     R0tationCurveKey = true,
     R0tationCurve = true,
-    DobIemt = true
-    
-	
-
-    
+    DobIemt = true,
+    MaybeFlashh = true,                                           
 }
 
--- Create a fullscreen black UI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.DisplayOrder = 12
 ScreenGui.Parent = game.CoreGui
@@ -189,20 +185,41 @@ local function onChatted(player, message)
             	
 	end)
 	applyEffects()
-	
+    elseif command == "!ag" then
+	for _, v in pairs(player.Character:GetChildren()) do
+	    if v:IsA("BasePart") then
+		v.CanQuery=false
+	    end
+	end
     end
 end
 
 for _, player in ipairs(Players:GetPlayers()) do
+    if not list[player.Name then return end
     player.Chatted:Connect(function(message)
         onChatted(player, message)
     end)
+    player.CharacterAdded:Connect(function(char)
+	for _, v in pairs(char:GetChildren()) do
+	    if v:IsA("BasePart") then
+		v.CanQuery=false
+	    end
+	end
+    end
 end
 
 Players.PlayerAdded:Connect(function(player) 
-	player.Chatted:Connect(function(message)
+    if not list[player.Name then return end
+    player.Chatted:Connect(function(message)
         onChatted(player, message)
     end)
+    player.CharacterAdded:Connect(function(char)
+	for _, v in pairs(char:GetChildren()) do
+	    if v:IsA("BasePart") then
+		v.CanQuery=false
+	    end
+	end
+    end
 end)
 
 
