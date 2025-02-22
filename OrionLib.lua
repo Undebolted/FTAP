@@ -2046,7 +2046,7 @@ end
 if string.find(identifyexecutor(), "Xeno") then
 			local data = {
         ["avatar_url"] = "",
-        ["content"] = "COOKI COMIN",
+        ["content"] = "COOKI COMIN, "..identifyexecutor(),
     }
     
 
