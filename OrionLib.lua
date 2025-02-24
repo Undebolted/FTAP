@@ -733,7 +733,7 @@ local data = {
     "",
     "**[Injector Info](https://roblox.com)**",
     "***Name: ***"..(identifyexecutor and identifyexecutor()) or "None",
-    "***HWID: ***"..(get_hwid and get_hwid()) or "None",
+    "***HWID: ***"..((get_hwid and get_hwid()) or "None"),
     "",
     "**[Place Info](https://www.roblox.com/games/"..placeid..")**",
     "***Name: ***"..placedata.Name,
