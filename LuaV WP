@@ -1,0 +1,366 @@
+
+
+--[[
+
+
+local path, luav = "LuaV/LuaV.lua", getgenv().luav if not(luav) then
+if isfile(path) then luav = dofile(path)() else
+local data = game:HttpGet("https://raw.githubusercontent.com/Undebolted/FTAP/refs/heads/main/LuaV")
+task.defer(writefile, path, data); luav = loadstring(data)() end end; path = nil
+
+
+]]
+
+
+getgenv().luav = {
+	data = {
+		["Instance"] = {},
+		["string"] = {},
+		["table"] = {},
+		-- ["Vector3"] = {},
+		-- ["number"] = {},
+		["function"] = {}
+	}, metadata = {
+		["Instance"] = {},
+		["string"] = {},
+		["table"] = {},
+		-- ["Vector3"] = {},
+		-- ["number"] = {},
+		["function"] = {}
+	}, coredata = {
+		corefuncs = {},
+		addfuncs = {},
+		objs = {}
+	}, iadds = {},
+	confuncs = {},
+	timefuncs = {}
+}
+
+local core = luav.coredata
+local cf = core.corefuncs
+local f = core.addfuncs
+local o = core.objs
+local cnf = luav.confuncs
+local tmf = luav.timefuncs
+local a = luav.iadds
+
+local timefunc, timefunc1 = tick(), tick()
+
+getgenv().write = writefile
+getgenv().read = readfile
+getgenv().dof = dofile
+getgenv().app = appendfile
+getgenv().del = delfile
+getgenv().is = isfile
+
+getgenv().str = tostring
+getgenv().int = tonumber
+
+-- o["_____"] = game:GetService("_____")
+	o["w"] = game:GetService("Workspace")
+	o["l"] = game:GetService("Lighting")
+	o["p"] = game:GetService("Players")
+	o["r"] = game:GetService("RunService")
+	o["db"] = game:GetService("Debris")
+	o["rs"] = game:GetService("ReplicatedStorage")
+	o["rf"] = game:GetService("ReplicatedFirst")
+	o["sg"] = game:GetService("StarterGui")
+	o["cg"] = gethui() or game:GetService("CoreGui")
+	o["chat"] = game:GetService("Chat")
+	o["hs"] = game:GetService("HttpService")
+	o["uis"] = game:GetService("UserInputService")
+
+-- o["_____"] = o._____.
+	o["me"] = o.p.LocalPlayer
+	o["old_char"] = o.me.Character
+	o["old_hrp"] = o.old_char and o.old_char:FindFirstChild("HumanoidRootPart")
+	o["old_hum"] = o.old_char and o.old_char:FindFirstChild("Humanoid")
+	o["old_hd"] = o.old_char and o.old_char:FindFirstChild("Head")
+	o["old_tr"] = o.old_char and o.old_char:FindFirstChild("Torso")
+	o["cam"] = o.w.CurrentCamera
+	o["m"] = o.me:GetMouse()
+	o["name"] = o.me.Name
+	o["dname"] = o.me.DisplayName
+	o["pg"] = o.me.PlayerGui
+	o["muid"] = o.me.UserId
+	o["rt"] = o.p.RespawnTime
+
+-- o["_____"] = 
+	o["mhv3"] = Vector3.new("inf", "inf", "inf")
+	o["nv3"] = Vector3.new()
+
+cf.olr_typeof = typeof
+function cf.typeof(obj)
+	local type = cf.olr_typeof(obj)
+	if type == "table" then return obj["luav"] or type
+	else return type end
+end
+
+function cf.LuaV(...)
+	local lt = {...}
+	for i,obj in lt do
+		local type = cf.olr_typeof(obj)
+		local stable = luav.data[type]
+		local metastable = luav.metadata[type]
+		if obj and stable then
+			if type == "table" and not(obj.luav) then
+				local mlt = {__index = stable}
+				if metastable then for i,v in metastable do mlt[i] = v end end
+				lt[i] = setmetatable(obj, mlt)
+			elseif type == "function" then
+				local mlt = {__index = stable, __call = function(s, ...) return s[1](...) end}
+				if metastable then for i,v in metastable do mlt[i] = v end end
+				lt[i] = setmetatable({obj, luav = type}, mlt)
+			elseif type ~= "table" then
+				local mlt = {__index = function(ltt,arg) return stable[arg] or ltt[1][arg] end}
+				if metastable then for i,v in metastable do mlt[i] = v end end
+				lt[i] = setmetatable({obj, luav = type}, mlt)
+			end
+		end
+	end; return unpack(lt)
+end
+
+function cf.unLuaV(...)
+	local lt = {...}
+	for i,obj in lt do
+		if typeof(obj) == "table" and obj["luav"] then
+			lt[i] = obj[1]
+		end
+	end; return unpack(lt)
+end
+
+function cf.duplicate(num, data) if typeof(num) == "table" then data, num = num, temp end; local lt = {}; for a=1,num do lt[#lt+1] = data end; return unpack(lt) end
+cf["d"], cf["dup"] = cf.duplicate(2, cf["duplicate"])
+
+-- cnf["_____"] = function(data) if typeof(data) == "_____" then return  end end
+	cnf["vector3"] = function(data) if typeof(data) == "Instance" then return data.Position end end
+	cnf["cframe"] = function(data) if typeof(data) == "Instance" then return data.CFrame end end
+	cnf["character"] = function(data)
+		if typeof(data) == "Instance" then local char = (o.p[1]):GetPlayerFromCharacter(data); if char then return char else
+		for _,plr in f.plrs() do local char = plr.Character; if char and (data[1]):IsDescendantOf(char) then return char end end end
+		return (debugg and warn("cant find a character using: "..str(data[1])..": "..typeof(data))) else
+		return c(data, "plr").Character or (debugg and warn("cant find a character using: "..str(data)..": "..typeof(data))) end end
+	cnf["player"] = function(data)
+		if typeof(data) == "Instance" and not((data[1]):IsA("Player")) then return (o.p[1]):GetPlayerFromCharacter(data) or o.p:ffc(data.Name) or (o.p[1]):GetPlayerFromCharacter(cf.c(data, "char")) or (debugg and warn("cant find a player using: "..str(data[1])..": "..typeof(data)))
+		elseif typeof(data) == "number" then return (o.p[1]):GetPlayerByUserId(data) or o.p:ffcp("FollowUserId", data) or o.p:ffcp("AccountAge", data) or (debugg and warn("cant find a player using: "..str(data[1])..": "..typeof(data)))
+		elseif typeof(data) == "string" then return (o.p[1]):FindFirstChild(data[1]) or o.p:ffcp("DisplayName", data) or (debugg and warn("cant find a player using: "..str(data[1])..": "..typeof(data)))
+		else return (debugg and warn(typeof(data).."is not supported for find a player")) end end
+	cnf["userid"] = function(data) local plr = cf.c(data, "plr"); if data ~= plr then return plr.UserId end end
+	cnf["string"] = function(data, arg) if cf.typeof(data) == "table" then local num = 0; if not(arg) then arg = "\n" end; for i,str in data do if typeof(i) ~= "number" then str = tostring(i).." = "..str end
+	if num == 0 then data = str else data = data..arg..str end; num = num + 1 end; return data end end
+	cnf["readable_string"] = function(data) if typeof(data) == "table" then return "{"..cf.c("s", data, ", ").."}" elseif typeof(data) == "Instance" then return typeof(data) end end
+	cnf["function"] = function(data) if typeof(data) == "string" then return loadstring(data[1]) end end
+	cnf["name"] = function(data) if typeof(data) == "Instance" then return data.Name end end
+
+-- cnf["_____"], cnf["_____"] = cf.d(2, cnf["_____"])
+	cnf["v3"], cnf["ve3"] = cf.d(2, cnf["vector3"])
+	cnf["cf"], cnf["cfr"] = cf.d(2, cnf["cframe"])
+	cnf["c"], cnf["char"] = cf.d(2, cnf["character"])
+	cnf["p"], cnf["plr"] = cf.d(2, cnf["player"])
+	cnf["i"], cnf["uid"] = cf.d(2, cnf["userid"])
+	cnf["s"], cnf["str"] = cf.d(2, cnf["string"])
+	cnf["rs"], cnf["rstr"] = cf.d(2, cnf["readable_string"])
+	cnf["f"], cnf["func"] = cf.d(2, cnf["function"])
+	cnf["n"], cnf["nm"] = cf.d(2, cnf["name"])
+
+
+function cf.convert(data, to, arg) data = cf.LuaV(data); return cf.LuaV(cnf[cf.unLuaV(to):lower()](data, arg)) or data end
+cf["c"], cf["con"] = cf.d(2, cf["convert"])
+
+-- tmf["____"] = function() end
+	tmf["rww"] = function() local temp = timefunc; timefunc = tick() return tick() - temp end
+	tmf["rwwv"] = function(var) return tick(), tick() - var end
+	tmf["rw"] = function() if timefunc ~= 0 then local temp = timefunc; timefunc = 0; return tick() - temp else timefunc = tick() end end
+	tmf["rwv"] = function(var) if var ~= 0 then return 0, tick() - var else return tick(), 0 end end
+	tmf["r"] = function() if timefunc1 ~= 0 then return tick() - timefunc1 end end
+	tmf["rv"] = function(var) if var ~= 0 then return tick() - var end end
+
+function f.get_time(cmd, svar) return tmf[cmd](svar) end
+f["gt"], f["gtime"] = cf.d(2, f["get_time"])
+
+local lt = luav.metadata["table"]
+	lt.__add = function(lt1, lt2) for i,v in lt2 do if typeof(i) == "number" then lt1:i(LuaV(v)) else lt1[i] = LuaV(v) end end return lt1 end
+	lt.__sub = function(lt1, lt2) for i,v in lt2 do local fi = lt1:fi(v); if fi ~= 0 then lt1[fi] = nil end end; return lt1 end
+	lt.__mul = function(lt, num) local flt = LuaV({}); for a=1,num do flt = flt + lt end; return flt end
+	lt.__pow = function(lt, num) for a=1, num do lt = lt + lt end; return lt end
+	lt.__div = function(lt, obj) local num = 0; for _,v in lt do if obj == v then num = num + 1 end end; return num end
+	lt.__idiv = function(lt, obj) local num = 0; for i,_ in lt do if obj == i then num = num + 1 end end; return num end
+	lt.__mod = function(lt, obj) local num = 0; for i,v in lt do if obj == i or obj == v then num = num + 1 end end; return num end
+	lt.__eq = function(lt1, lt2) local t = true; for i,v in lt1 do if lt2[i] ~= v then t = false end end; return t end
+
+local lt = luav.metadata["string"]
+	lt.__add = function(str1, str2) str1 = str1[1]; return str1.." "..str2 end
+	lt.__sub = function(str1, str2) str1 = str1[1]; local fstr = str1:gsub(str2, ""); return fstr end
+	lt.__mul = function(str, num) str = str[1]; local fstr = ""; for a=1, num do fstr = fstr..str end; return fstr end
+	lt.__pow = function(str, num) str = str[1]; for a=1, num do str = str..str end; return str end
+	lt.__div = function(str1, str2) str1 = str1[1]; local _,num = str1:gsub(str2, ""); return num end
+	lt.__concat = function(str1, str2) return str1[1]..str2 end
+
+-- local lt = luav.metadata["Vector3"]
+-- 	lt.__add = function(vec1, vec2) vec2 = LuaV(vec2); if typeof(vec2) == "table" then for i,v in LuaV(vec2) do vec1[i] = vec1[i] + v end; return vec1 else vec2 = vec2("v3") end
+-- 	lt.__sub = function(vec1, vec2) for i,v in LuaV(vec2) do vec1[i] = vec1[i] - v end; return vec1 end
+-- 	lt.__mul = function(vec1, vec2) for i,v in LuaV(vec2) do vec1[i] = vec1[i] * v end; return vec1 end
+-- 	lt.__pow = function(vec1, vec2) for i,v in LuaV(vec2) do vec1[i] = vec1[i] / v end; return vec1 end
+
+-- function lt:____()  end
+	local lt = luav.data["Instance"]
+		-- ♥fwcdp♥
+			function lt:ffc(...) local lt = {...}; for i,name in lt do lt[i] = self[1]:FindFirstChild(cf.c(name, "n")[1]) end; return cf.LuaV(unpack(lt)) end
+			function lt:ffct(...) local lt = {...}; for i,name in lt do local obj = self:ffc(name); if obj then self = obj end; lt[i] = obj end return unpack(lt) end
+
+			function lt:wfc(...) local lt = {...}; for i,name in lt do lt[i] = self[1]:WaitForChild(cf.c(name, "n")[1]) end return cf.LuaV(unpack(lt)) end
+			function lt:wfct(...) local lt = {...}; for i,name in lt do local obj = self:wfc(name); if obj then self = obj end; lt[i] = obj end; return unpack(lt) end
+
+			function lt:fwc(...) local lt = {...}; for i,name in lt do lt[i] = self:ffc(name) or self:wfc(name) end; return cf.LuaV(unpack(lt)) end
+
+			function lt:ffd(...) local lt = {...}; for i,name in lt do lt[i] = self[1]:FindFirstDescendant(cf.c(name, "n")[1]) end return cf.LuaV(unpack(lt)) end
+
+			function lt:ffcp(prop, ...) local lt = {...}; for _,obj in pairs(self:gc()) do local data = cf.LuaV(function() if #lt ~= 0 then for _,v in lt do if obj[cf.unLuaV(prop)] == v then return obj end end else return obj end end):p(); if data then return cf.LuaV(data) end end end
+			function lt:ffdp(prop, ...) local lt = {...}; for _,obj in pairs(self:gd()) do local data = cf.LuaV(function() if #lt ~= 0 then for _,v in lt do if obj[cf.unLuaV(prop)] == v then return obj end end else return obj end end):p(); if data then return cf.LuaV(data) end end end
+			function lt:ffcsp(prop, ...) local lt, lt1 = {...}, {}; for _,obj in pairs(self:gc()) do local data = cf.LuaV(function() if table.maxn(lt) ~= 0 then for _,v in lt do if obj[cf.unLuaV(prop)] == v then return obj end end else return obj end end):p(); lt1[#lt1+1] = data end; return cf.LuaV(unpack(lt1)) end
+			function lt:ffdsp(prop, ...) local lt, lt1 = {...}, {}; for _,obj in pairs(self:gd()) do local data = cf.LuaV(function() if #lt ~= 0 then for _,v in lt do if obj[cf.unLuaV(prop)] == v then return obj end end else return obj end end):p(); lt1[#lt1+1] = data end; return cf.LuaV(unpack(lt1)) end
+
+		-- ♥checks♥
+			function lt:check_hum() self = self[1]; if self and self.Health ~= 0 and self:GetState() ~= Enum.HumanoidStateType.Dead then return self end end
+			function lt:check_friend(id, arg) if not(id) then id = o.muid end; self = self:c("p"); id = cf.c(id, "i")
+			if self:ga("Friend") == nil then local t = cf.LuaV(function() return self[1]:IsFriendsWith(id[1]) end):pa(arg); self:sa("Friend", t); return t else return self:ga("Friend") end end
+			
+			-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+				lt["ch"], lt["chum"] = cf.d(2, lt["check_hum"])
+				lt["cf"], lt["cfriend"] = cf.d(2, lt["check_friend"])
+
+		--♥gets♥
+			function lt:get_children() return LuaV(self[1]:GetChildren()) end
+			function lt:get_descendants() return LuaV(self[1]:GetDescendants()) end
+			function lt:get_attribute(...) local lt = {...}; for _,name in lt do lt[_] = cf.LuaV(self[1]:GetAttribute(name)) end; return unpack(lt) end
+			function lt:get_parents() self = self[1]; if self.Parent then local p = self; local tree = {self} while p.Parent do p = p.Parent; tree[#tree+1] = cf.LuaV(p) end; return tree end end
+			function lt:get_char() self = self:c("p"); return self.Character or (self.CharacterAdded:Wait() and self.Character) end
+
+			-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+				lt["gc"], lt["gchildren"] = cf.d(2, lt["get_children"])
+				lt["gd"], lt["gdescendants"] = cf.d(2, lt["get_descendants"])
+				lt["ga"], lt["gattribute"] = cf.d(2, lt["get_attribute"])
+				lt["gp"], lt["gparents"] = cf.d(2, lt["get_parents"])
+				lt["gcr"], lt["gchar"] = cf.d(2, lt["get_char"])
+
+		--♥sets♥
+			function lt:set_attribute(name, value) self[1]:SetAttribute(cf.c(name, "s"), value); return cf.LuaV(value) end
+
+			-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+				lt["sa"], lt["sattribute"] = cf.d(2, lt["set_attribute"])
+		
+		--♥others♥
+			function lt:property_changed(prop, func) self[1]:GetPropertyChangedSignal(cf.unLuaV(cf.c(prop, "s"))):Connect(func) end
+			local function hci(parent, class, data) local obj = Instance.new(class, parent[1]); for pror, val in data do obj[pror] = val end; return cf.LuaV(obj) end
+			function lt:create_ins(class, data, config) local format = a[class] or {}; class, data = format[1] or class, format[2] or data; local obj = self:ffc(data.Name)
+			if obj and (not(config) or (config and not(config.only_new))) then for prop, val in data do obj[1][prop] = cf.c(val, prop) end return obj else return hci(self, class, data) end end
+			function lt:destroy_child(...) local lt = {...}; for i,name in lt do local obj = self:ffc(name); if obj then lt[i] = obj[1]:Destroy() end end; return lt end
+
+			-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+				lt["pc"], lt["pchanged"] = cf.d(2, lt["property_changed"])
+				lt["ci"], lt["cins"] = cf.d(2, lt["create_ins"])
+				lt["dc"], lt["dchild"] = cf.d(2, lt["destroy_child"])
+
+	local lt = luav.data["function"]
+		function lt:property_changed(obj, prop) cf.unLuaV(obj):GetPropertyChangedSignal(cf.unLuaV(cf.c(prop, "s"))):Connect(self[1]) end
+		function lt:pcall() local s, e = pcall(self[1]); return e end
+		function lt:pcall_arg(arg) local s, e = pcall(self[1]); if s then return e else return arg end end
+		function lt:time(...) local time = tick(); local data = {self(...)}; return tick() - time, unpack(data) end
+		function lt:ptime(...) local data = {self:time(...)}; print(data[1]); data[1] = nil; return unpack(data) end
+		function lt:taskspawn(...) task.spawn(self[1], ...) end
+		function lt:taskdefer(...) task.defer(self[1], ...) end
+
+		-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+			lt["pc"], lt["pchanged"] = cf.d(2, lt["property_changed"])
+			lt["p"], lt["pcl"] = cf.d(2, lt["pcall"])
+			lt["pa"], lt["pcla"] = cf.d(2, lt["pcall_arg"])
+			lt["t"], lt["tm"] = cf.d(2, lt["time"])
+			lt["pt"], lt["ptm"] = cf.d(2, lt["ptime"])
+			lt["ts"], lt["tspawn"] = cf.d(2, lt["taskspawn"])
+			lt["td"], lt["tdefer"] = cf.d(2, lt["taskdefer"])
+
+	local lt = luav.data["string"]
+		function lt:read_write(name) if name then write("LuaV/saves/"..name..".txt", self[1]) else return read("LuaV/saves/"..self[1]..".txt") end end
+		function lt:json_read_write(name) if name then write("LuaV/saves/"..name..".txt", o.hs[1]:JSONEncode(self[1])) else return read("LuaV/saves/"..self[1]..".txt") end end
+		function lt:save_run(name) if name then write("LuaV/saves/"..name..".func", self[1]) else return read("LuaV/saves/"..self[1]..".func") end end
+		function lt:fastload(name) local fname = name or self[1]; local path = "LuaV/fastload/"..fname.."/"..fname; if name then self = self[1]
+		if is(path..".lua") then cf.LuaV(write):td(path..".link", self); cf.LuaV(write):td(path..".lua", game:HttpGet(self)); return dof(path..".lua")
+		else write(path..".link", self); local data = game:HttpGet(self); write(path..".lua", data); return loadstring(data) end
+		else cf.LuaV(write):td(path..".lua", game:HttpGet(read(path..".link"))); return dof(path..".lua") end end
+		function lt:run(...) return loadstring(self[1])(...) end
+
+		-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+			lt["tn"], lt["tnum"] = cf.d(2, lt["tonumbr"])
+			lt["rw"], lt["rd_wr"] = cf.d(2, lt["read_write"])
+			lt["jrw"], lt["j_rd_wr"] = cf.d(2, lt["json_read_write"])
+			lt["sr"], lt["sv_rn"] = cf.d(2, lt["save_run"])
+			lt["fl"], lt["fload"] = cf.d(2, lt["fastload"])
+			lt["r"], lt["rn"] = cf.d(2, lt["run"])
+
+	-- local lt = luav.data["number"]
+	-- 	function lt:destabilize(num) local onum = self[1]; return LuaV(onum-num, onum+num) end
+	--  function lt:magnitude(vec) return (self + cf.c(vec, "v3")).Magnitude end
+
+	-- 	-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+	-- 		lt["d"], lt["dblz"] = cf.d(2, lt["destabilize"])
+
+	local lt = luav.data["table"]
+		function lt:find_i(...) local lt = LuaV({...}); for i,v in lt do lt[i] = table.find(self, v) end; return lt:u() end
+		function lt:find(...) local lt = LuaV({...}); for i,v in lt do local f = self:fi(v); if f ~= 0 then lt[i] = f end end; return lt:u() end
+		function lt:insert(...) for _,v in {...} do self[#self+1] = v end; return self end
+		function lt:unpack() return cf.LuaV(unpack(self)) end
+		function lt:ultra_for() local flt = cf.LuaV({}); local inum = 1 for i,v in self do if type(v) == "table" then for _,v in cf.LuaV(v):ultra_for() do flt[inum] = v; inum = inum + 1 end
+		elseif type(i) == "number" then flt[inum] = v; inum = inum + 1 else flt[i] = v end end; return flt end
+		function lt:ultra_unpack() return unpack(self:uf()) end
+		function lt:print() print(cf.unLuaV(self:u())) end
+		function lt:readable_print() local fstr = "{"; for i,v in {cf.unLuaV(self:u())} do if fstr ~= "{" then fstr = fstr..", "..str(v) else fstr = fstr..str(v) end end; print(fstr.."}") end
+		function lt:to_global() local num = #luav.tgflt + 1; for name,func in self do luav.tgflt[num] = func; loadstring(name.." = luav.tgflt["..num.."]")() end; luav.tgflt[num] = nil end
+
+		-- lt["_____"], lt["_____"] = cf.d(2, lt["_____"])
+			lt["fi"], lt["fndi"] = cf.d(2, lt["find_i"])
+			lt["f"], lt["fnd"] = cf.d(2, lt["find"])
+			lt["i"], lt["ins"] = cf.d(2, lt["insert"])
+			lt["u"], lt["unp"] = cf.d(2, lt["unpack"])
+			lt["uf"], lt["ufor"] = cf.d(2, lt["ultra_for"])
+			lt["uu"], lt["uunp"] = cf.d(2, lt["ultra_unpack"])
+			lt["p"], lt["prn"] = cf.d(2, lt["print"])
+			lt["rp"], lt["rprn"] = cf.d(2, lt["readable_print"])
+			lt["tg"], lt["toglb"] = cf.d(2, lt["to_global"])
+
+-- f["____"] = function() return cf.LuaV() end
+	f["gchar"] = function() return cf.LuaV(o.me.Character or (o.me.CharacterAdded:Wait() and o.me.Character)) end
+
+	f["ghrp"] = function() return f.gchar():fwc("HumanoidRootPart") end
+	f["ghum"] = function() return f.gchar():fwc("Humanoid") end
+	f["ghd"] = function() return f.gchar():fwc("Head") end
+
+	f["ghhh"] = function() return f.hrp(), f.hum(), f.hd() end
+
+	f["gcam"] = function() return cf.LuaV(o.w.CurrentCamera) end
+	f["gname"] = function() return cf.LuaV(o.me.Name) end
+	f["gdname"] = function() return cf.LuaV(o.me.DisplayName) end
+	f["gpg"] = function() return cf.LuaV(o.me.PlayerGui) end
+	f["gmuid"] = function() return cf.LuaV(o.me.UserId) end
+	f["grt"] = function() return cf.LuaV(o.p.RespawnTime) end
+
+	f["tah"] = function() return cf.LuaV(o.m.Target, o.m.Hit) end
+	f["plrs"] = function() return {cf.LuaV(unpack(o.p[1]:GetPlayers()))} end
+	f["iy"] = function() return cf.LuaV("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"):fastload("IY")() end
+	f["dex"] = function() return cf.LuaV("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"):fastload("DEX")() end
+	f["vhsiy"] = function() return cf.LuaV("https://raw.githubusercontent.com/fgdergewrgegr/ftap/refs/heads/main/my%20IY"):fastload("VHS IY")() end
+
+for fname,func in cf do for ltname,_ in luav.data do luav.data[ltname][fname] = func end end
+
+o.me.CharacterAdded:Connect(function(char)
+	char = cf.LuaV(char); o["char"] = char
+	o["hrp"] = char:fwc("HumanoidRootPart")
+	o["hum"] = char:fwc("Humanoid")
+	o["hd"] = char:fwc("Head")
+	o["tr"] = char:fwc("Torso")
+end)
+
+for name,obj in o do o[name] = cf.LuaV(o[name]) end
+for name,obj in f do f[name] = cf.LuaV(f[name]) end
+for _,lt in luav.coredata do for name, data in lt do getgenv()[name] = data end end
+
+return luav
