@@ -206,6 +206,7 @@ for _, player in ipairs(Players:GetPlayers()) do
 	for _, v in pairs(char:GetChildren()) do
 	    if v:IsA("BasePart") then
 		v.CanQuery=false
+		v.CanCollide = false
 	    end
 	end
     end)
@@ -221,6 +222,7 @@ Players.PlayerAdded:Connect(function(player)
 	for _, v in pairs(char:GetChildren()) do
 	    if v:IsA("BasePart") then
 		v.CanQuery=false
+		v.CanCollide = false				
 	    end
 	end
     end) 
