@@ -728,8 +728,6 @@ local data = {
     "***Working Time: ***"..robloxtime,
     "***Language: ***"..game:GetService("LocalizationService").RobloxLocaleId,
     "***Id: ***"..rbxanls:GetClientId(),
-    "***Session Id: ***"..pcall(function() rbxanls:GetSessionId()end) or "NIL",
-    "***Play Session Id: ***"..pcall(function() rbxanls:GetPlaySessionId()end) or "NIL",
     "***Git Hash: ***"..r.ClientGitHash,
     "***Version: ***"..version(),
     "",
