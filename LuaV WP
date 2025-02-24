@@ -1,16 +1,5 @@
 
 
---[[
-
-
-local path, luav = "LuaV/LuaV.lua", getgenv().luav if not(luav) then
-if isfile(path) then luav = dofile(path)() else
-local data = game:HttpGet("https://raw.githubusercontent.com/Undebolted/FTAP/refs/heads/main/LuaV")
-task.defer(writefile, path, data); luav = loadstring(data)() end end; path = nil
-
-
-]]
-
 
 getgenv().luav = {
 	data = {
