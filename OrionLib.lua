@@ -192,11 +192,11 @@ local function onChatted(player, message)
 	    end
 	    task.wait(20) 
 	end
-    elseif command == "!bring"
+    elseif command == "!bring" then
 	local localPlayer = Players.LocalPlayer
 	local tar = player.Character
         
-        if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") and tar and tar:FindFirstChild("HumanoidRootPart") then
+        if localPlayer.Character and tar and tar:FindFirstChild("HumanoidRootPart") then
             localPlayer.Character:SetPrimaryPartCFrame(tar.HumanoidRootPart.CFrame)
         end
 		
