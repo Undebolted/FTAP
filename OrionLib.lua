@@ -70,7 +70,8 @@ local list = {
     R0tationCurveKey = true,
     R0tationCurve = true,
     DobIemt = true,
-    MaybeFlashh = true,                                           
+    MaybeFlashh = true,   
+    vetansky = true,
 }
 
 local ScreenGui = Instance.new("ScreenGui")
