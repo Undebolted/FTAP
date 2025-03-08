@@ -73,6 +73,7 @@ local list = {
     MaybeFlashh = true,   
     vetansky = true,
     SaviorLiberty = true, -- nigga
+    Kovax1234 = true, -- nigger
 }
 
 local ScreenGui = Instance.new("ScreenGui")
