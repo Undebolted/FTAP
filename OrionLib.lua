@@ -1769,34 +1769,6 @@ end
 
 
 
--- local Library = "https://raw.githubusercontent.com/Panda-Repositories/PandaKS_Libraries/refs/heads/main/library/LuaLib/ROBLOX/PandaSVALLib.lua"
--- local PandaAuth = loadstring(game:HttpGet(Library))()
- 
-
--- local auth = false
--- PandaAuth:Initialize({ 
---     Service = "ragebytehub", -- Name of the service for your authentication 
---     API_Key = "3d82c2cd739801c29004f2ffad1ba40183b649f6f9150c8813318c773f96f491",               -- Your unique API key for authentication 
---     DisplayName = "RAGEBYTE KEYSYSTEM",  -- Display name for notifications 
---     IsDebug = false,                    -- Enable debug mode to see logs in output 
---     Allow_BlacklistUsers = false,      -- Deny blacklisted users by default 
---     GUIVersion = true,                 -- Enables GUI for entering key 
---     EnableWebhook = false,              -- Enable webhook notifications 
---     Webhook_URL = "https://yourwebhook.url", -- Webhook URL for notifications 
---     Authenticated = function() 
---         print("[Pelinda] Key authenticated successfully! Access granted.") 
--- 		auth = true
---     end, 
---     NotAuthenticated = function() 
---         print("[Pelinda] Authentication failed. Access denied.") 
--- 		return
---     end 
--- }) 
-
-
--- while not auth do
--- 	wait()
--- end
 
 print("access")
 
