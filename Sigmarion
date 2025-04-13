@@ -31,7 +31,7 @@ local OrionLib = {
 		},
 		
 	},
-	SelectedTheme = "Nigga",
+	SelectedTheme = "Default",
 	Folder = nil,
 	SaveCfg = false
 }
