@@ -12,7 +12,7 @@ local OrionLib = {
 	ThemeObjects = {},
 	Connections = {},
 	Flags = {},
-	Themes = Themes = {
+	Themes = {
 		Default = {
 			Main = Color3.fromRGB(200, 230, 255),
 			Second = Color3.fromRGB(220, 240, 255),
