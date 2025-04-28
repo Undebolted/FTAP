@@ -12,7 +12,7 @@ local OrionLib = {
 	ThemeObjects = {},
 	Connections = {},
 	Flags = {},
-	Themes = {
+	Themes = Themes = {
 		Default = {
 			Main = Color3.fromRGB(200, 230, 255),
 			Second = Color3.fromRGB(220, 240, 255),
@@ -29,9 +29,17 @@ local OrionLib = {
 			Text = Color3.fromRGB(255, 255, 255), 
 			TextDark = Color3.fromRGB(100, 46, 29) 
 		},
-		
+		LightGray = {
+			Main = Color3.fromRGB(230, 230, 230),
+			Second = Color3.fromRGB(245, 245, 245),
+			Stroke = Color3.fromRGB(200, 200, 200),
+			Divider = Color3.fromRGB(210, 210, 210),
+			Text = Color3.fromRGB(50, 50, 50),
+			TextDark = Color3.fromRGB(120, 120, 120)
+		}
 	},
-	SelectedTheme = "Default",
+
+	SelectedTheme = "LightGray",
 	Folder = nil,
 	SaveCfg = false
 }
