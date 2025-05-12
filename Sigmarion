@@ -48,7 +48,7 @@ local OrionLib = {
 
 	},
 
-	SelectedTheme = "OrangeDark",
+	SelectedTheme = "LightGray",
 	Folder = nil,
 	SaveCfg = false
 }
